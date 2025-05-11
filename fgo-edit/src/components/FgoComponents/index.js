@@ -1,0 +1,1 @@
+export { default as FgoTop } from './FgoTop.vue';
