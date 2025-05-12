@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'picture_domain' => '172.30.20.52',
+    'picture_domain' => '192.168.0.170',
     'picture_protocol' => 'http://',
     'path_data' => '/var/www/AdminApi/storage',
-    'upload_path' => '/var/www/html/lumen-app/storage',
+    'upload_path' => '/home/olt/product/myPastime/lumen-app/storage',
     'temp_path' => storage_path('temp'),
     'project_id' => 'teems',
 #    'admin_account' => 'admin',

@@ -6,10 +6,18 @@
             $router->post($apiName, $objName.'Controller@post'.$objName);
             $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
             $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
-             //上傳角色圖片
-            $router->post("upload_role_image", $objName.'Controller@psotUploadRoleImage');
             
-
+            //角色資源
+            $apiName = "role_resource";
+            $objName = "RoleResource";
+            $router->get($apiName, $objName.'Controller@getAll'.$objName);
+            $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);            
+            $router->post($apiName, $objName.'Controller@post'.$objName);
+            $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
+            $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
+            //上傳角色圖片
+            $router->post("upload_role_image", $objName.'Controller@psotUploadRoleImage');
+ 
 
             /*
              *  性別
@@ -91,6 +99,42 @@
             //對話內容
             $apiName = "talk_content";
             $objName = "TalkContent";
+            $router->get($apiName, $objName.'Controller@getAll'.$objName);
+            $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);
+            $router->post($apiName, $objName.'Controller@post'.$objName);
+            $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
+            $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
+
+            //技能
+            $apiName = "skill";
+            $objName = "Skill";
+            $router->get($apiName, $objName.'Controller@getAll'.$objName);
+            $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);
+            $router->post($apiName, $objName.'Controller@post'.$objName);
+            $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
+            $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
+
+            //技能等級
+            $apiName = "skill_level";
+            $objName = "SkillLevel";
+            $router->get($apiName, $objName.'Controller@getAll'.$objName);
+            $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);
+            $router->post($apiName, $objName.'Controller@post'.$objName);
+            $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
+            $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
+
+            //技能等級效果
+            $apiName = "skill_level_buff";
+            $objName = "SkillLevelBuff";
+            $router->get($apiName, $objName.'Controller@getAll'.$objName);
+            $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);
+            $router->post($apiName, $objName.'Controller@post'.$objName);
+            $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
+            $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
+
+            //效果
+            $apiName = "buff";
+            $objName = "Buff";
             $router->get($apiName, $objName.'Controller@getAll'.$objName);
             $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);
             $router->post($apiName, $objName.'Controller@post'.$objName);

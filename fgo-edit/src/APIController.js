@@ -81,6 +81,11 @@ function saveRoleImage(input,fileObject,action)
   postFile("upload_role_image",input,fileObject,action);
 }
 
+function getRoleResourceImage(input,action)
+{
+  sendAPI("role_resource",input,action);
+}
+
 function getFeature(input,action)
 {
   sendAPI("feature",input,action);
@@ -267,4 +272,5 @@ export {
     getMapPos,
     addMapPos,
     delMapPos,
+    getRoleResourceImage,
 };

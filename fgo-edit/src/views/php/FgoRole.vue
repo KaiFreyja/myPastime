@@ -3,16 +3,16 @@
   
 
   <h1>角色</h1> 
-<div class="row">
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <div v-if="roleArray.length == 0">請選擇</div>
-    <div v-else>{{ roleArray[selectRoleIndex].name }}</div>
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li v-for="(role,index) in roleArray"><a class="dropdown-item" v-on:click="clickDrapRole(index)">{{ role.name}}</a></li>
-  </ul>
-</div>
+<div style="display: flex;">
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <div v-if="roleArray.length == 0">請選擇</div>
+      <div v-else>{{ roleArray[selectRoleIndex].name + "\t" + roleArray[selectRoleIndex].description}}</div>
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li v-for="(role,index) in roleArray"><a class="dropdown-item" v-on:click="clickDrapRole(index)">{{ role.name + "\t" + role.description}}</a></li>
+    </ul>
+  </div>
 
   <button type="button" class="btn btn-primary" v-on:click="clickAddNewRole">新增使用者</button>
 
@@ -37,7 +37,7 @@
 <div class="dropdown">
   <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     <div v-if="genderArray.length == 0">請選擇</div>
-    <div v-else>{{ genderArray[selectGenderIndex].name }}</div>
+    <div v-else>{{ genderArray[selectGenderIndex].name}}</div>
   <span class="caret"></span></button>
   <ul class="dropdown-menu">
     <li v-for="(gender,index) in genderArray"><a class="dropdown-item" v-on:click="clickDrapGender(index)">{{ gender.name}}</a></li>
@@ -65,8 +65,8 @@
   
   <RoleImageEdit :rid="rid"/>
   <FeatureEdit :rid="rid"/>
+  <RoleImageUploadImage :rid="rid"/>
   <LevelAttrEdit :rid="rid"/>
-
 
 </template>
 
@@ -82,7 +82,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Button } from 'bootstrap';
 import {getProfession,getGender,getRole,AddNewRole,modifyRole,getOneRole} from '@/APIController';
-import { LevelAttrEdit,RoleImageEdit,FeatureEdit } from '@/components/FgoRole' ;
+import { LevelAttrEdit,RoleImageEdit,FeatureEdit,RoleImageUploadImage } from '@/components/FgoRole' ;
 import { FgoTop } from '@/components/FgoComponents' ;
 
 export default {
@@ -91,6 +91,7 @@ export default {
     LevelAttrEdit,
     RoleImageEdit,
     FeatureEdit,
+    RoleImageUploadImage,
   },
   setup() {
     const roleArray = ref([]);
@@ -158,6 +159,7 @@ export default {
         getRole({},(result)=>
         {
             roleArray.value = result.role.data;
+            clickDrapRole(0);
         });
     });
 
@@ -218,12 +220,15 @@ export default {
 
     function clickAddNewRole()
     {
-      AddNewRole({"name":"newRole","description":"newRole description"},(result)=>
+      var seq = roleArray.value.length + 1;
+      AddNewRole({"name":"newRole","description":"newRole description","seq":seq},(result)=>
       {
         console.log("clickAddNewRole");
         getRole({},(result)=>
         {
-            roleArray.value = result.role.data;
+            roleArray.value = result.role.data;            
+            selectRoleIndex.value = roleArray.value.length - 1;
+            clickDrapRole(selectRoleIndex.value);
         });
       });
     }

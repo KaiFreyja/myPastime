@@ -22,6 +22,17 @@ $router->get('/img/role/{filename}', function ($filename) {
     return response()->file($path);
 });
 
+$router->get('/img/role/{rid}/{filename}', function ($rid, $filename) {
+    $path = storage_path("role/{$rid}/{$filename}");
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path, [
+        'Content-Type' => mime_content_type($path)
+    ]);
+});
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/', function () {

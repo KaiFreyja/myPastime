@@ -24,6 +24,18 @@ let Fgo = [
     name: 'FgoMap',
     component: () => import('@/views/php/FgoMap.vue')
   },
+  {
+    // 技能
+    path: '/FgoSkill',
+    name: 'FgoSkill',
+    component: () => import('@/views/php/FgoSkill.vue')
+  },
+  {
+    // Buff
+    path: '/FgoBuff',
+    name: 'FgoBuff',
+    component: () => import('@/views/php/FgoBuff.vue')
+  },
   /*
   {
     // 使用教學

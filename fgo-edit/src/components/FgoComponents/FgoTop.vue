@@ -2,8 +2,9 @@
   <div class="row">
     <button type="button" class="btn btn-primary col-sm-1" v-on:click="goToRole">角色</button>
         <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoProfession">職階</button>
-    <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoFeature">屬性</button>
     <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoSkill">技能</button>
+        <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoBuff">Buff</button>
+            <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoFeature">屬性</button>
     <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoMaterial">素材</button>
         <button type="button" class="btn btn-primary col-sm-1" v-on:click="gotoMap">地圖</button>
   </div>
@@ -41,6 +42,11 @@ export default {
       router.push('FgoSkill');
     }
 
+    function gotoBuff()
+    {
+      router.push('FgoBuff');
+    }
+
     function gotoMaterial()
     {
       router.push('FgoMaterial');
@@ -56,6 +62,7 @@ export default {
       gotoProfession,
       gotoFeature,
       gotoSkill,
+      gotoBuff,
       gotoMaterial,
       gotoMap,
     };
