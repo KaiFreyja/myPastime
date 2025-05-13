@@ -7,8 +7,10 @@
 
 import UIKit
 import DGCharts
+import SwiftyJSON;
 
-class RoleContentViewController: UIViewController {
+class RoleContentViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
     @IBOutlet weak var imgRole: UIImageView!
     @IBOutlet weak var tvName: UILabel!
     @IBOutlet weak var tvDescription: UILabel!
@@ -18,12 +20,15 @@ class RoleContentViewController: UIViewController {
     @IBOutlet weak var lineView: LineChartView!
     
     @IBOutlet weak var tvLineNum: UILabel!
+    //---------------------role resource-----------------------------
+    @IBOutlet weak var collectionView: UICollectionView!
+    var displayedImages: [String] = [];
+    var timer : Timer?
     
     var roleInfo : [String:Any]?
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        print("5555555\(roleInfo)");
         
         if let info = roleInfo as? [String:Any]
         {
@@ -41,7 +46,8 @@ class RoleContentViewController: UIViewController {
                         }
                     }
                 }
-                
+
+                getRoleResource(rid: rid);
                 getLevelAttr(rid: rid);
             }
             if let name = info["name"] as? String
@@ -137,6 +143,123 @@ class RoleContentViewController: UIViewController {
             self.lineView.invalidateIntrinsicContentSize();
         }
    }
+    
+    func getRoleResource(rid : Int)
+    {
+        // 設定 layout，而不是重新 new 一個 collectionView
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        collectionView.setCollectionViewLayout(layout, animated: false)
+        collectionView.isPagingEnabled = true
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            //collectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            //collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            //collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: 500) // 可依照實際情況調整
+        ])
+        
+        var controller = APIController();
+        var input = ["rid":rid];
+        controller.GetRoleResource(input: input){result in
+            var json = JSON(result.getData());
+            var data = json["role_resource"]["data"];
+            
+            for (key, item) in data
+            {
+                self.displayedImages.append(item["url"].stringValue);
+            }
+            self.displayedImages.append(self.displayedImages[0]);
+            self.collectionView.reloadData();
+            
+            if self.displayedImages.count > 1 {
+                self.collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+            }
+
+            self.startAutoScroll();
+        }
+    }
+    
+    /*=====================================================================*/
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return displayedImages.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+
+        // 清除舊的 subviews
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(imageView)
+
+        // 設定 Auto Layout
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor)
+        ])
+
+        let imageName = displayedImages[indexPath.item]
+        print("imageName : " + imageName)
+
+        if let url = URL(string: imageName) {
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let data = try? Data(contentsOf: url),
+                   let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        imageView.image = image
+                    }
+                }
+            }
+        }
+        return cell;
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.frame.size
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        adjustIfNeeded()
+    }
+
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        adjustIfNeeded()
+    }
+
+    func adjustIfNeeded() {
+        let page = Int(collectionView.contentOffset.x / collectionView.frame.size.width)
+        if page == 0 {
+            collectionView.scrollToItem(at: IndexPath(item: displayedImages.count - 2, section: 0), at: .centeredHorizontally, animated: false)
+        } else if page == displayedImages.count - 1 {
+            collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+        }
+    }
+
+    func startAutoScroll() {
+        timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+            let current = Int(self.collectionView.contentOffset.x / self.collectionView.frame.size.width)
+            let next = current + 1
+            self.collectionView.scrollToItem(at: IndexPath(item: next, section: 0), at: .centeredHorizontally, animated: true)
+        }
+    }
+
+    deinit {
+        timer?.invalidate()
+    }
 }
 
 extension RoleContentViewController: ChartViewDelegate

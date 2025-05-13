@@ -21,6 +21,11 @@ class APIController
         sendApi(url:"role",input: input,callBack: callBack);
     }
     
+    func GetRoleResource(input:[String:Any],callBack: @escaping APICallbackClosure)
+    {
+        sendApi(url: "role_resource", input: input, callBack: callBack);
+    }
+    
     func GetGender(input: [String: Any], callBack: @escaping APICallbackClosure)
     {
         sendApi(url:"gender",input: input,callBack: callBack);
