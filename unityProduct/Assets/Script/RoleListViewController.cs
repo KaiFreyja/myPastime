@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using UnityEngine.EventSystems;
 
 public class RoleListViewController : MonoBehaviour
 {
@@ -42,6 +43,10 @@ public class RoleListViewController : MonoBehaviour
                 count++;
                 var co = g.GetComponent<RoleListItemController>();
                 co.SetName(a["name"].ToString());
+                co.onClick += () =>
+                {
+                    FindObjectOfType<RoleContentViewController>().open(a as JObject);
+                };
                 g.SetActive(true);
                 var download = g.AddComponent<ImageDownloader>();
                 download.StartDownload(Config.IMAGE_DOMAIN + a["rid"] + ".png",(Texture texture)=>

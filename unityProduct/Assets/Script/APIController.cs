@@ -11,6 +11,12 @@ public class APIController
         sendAPI("role", input, callBack);
     }
 
+    public void GetFgoRoleResource(JObject input,Action<APIResult> callBack)
+    {
+        sendAPI("role_resource", input, callBack);
+    }
+
+
     private void sendAPI(string url,JObject jobj,Action<APIResult> callBack)
     {
         GameObject g = new GameObject(url);
