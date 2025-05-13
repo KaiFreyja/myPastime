@@ -10,16 +10,27 @@ public class RoleContentViewController : MonoBehaviour
     public GameObject ImageContent = null;
     public Text LabelName = null;
     public Text LabelDescription = null;
+    public Button btnTalk = null;
+
+    private JObject info = new JObject();
+    public TalkViewController talkViewController = null;
 
     private void Start()
     {
+        btnTalk.onClick.AddListener(new UnityEngine.Events.UnityAction(openTalk));
         item.gameObject.SetActive(false);
+    }
+
+    private void openTalk()
+    {
+        talkViewController.open(info);
     }
 
     public void open(JObject jobj)
     {
         Debug.Log("open : " + jobj);
 
+        info = jobj;
         showData(jobj);
         clearImageViews();
         createImageViews(jobj);

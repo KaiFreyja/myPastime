@@ -16,6 +16,11 @@ public class APIController
         sendAPI("role_resource", input, callBack);
     }
 
+    public void AskAiTalk(JObject input, Action<APIResult> callBack)
+    {
+        postAPI("talk_group_ask", input, callBack);
+    }
+
 
     private void sendAPI(string url,JObject jobj,Action<APIResult> callBack)
     {
