@@ -27,16 +27,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3480F84A-A4CA-4553-AA11-7728C7A135E0"
-            shouldBeEnabled = "Yes"
+            uuid = "55E24EAF-C646-4D03-B0DC-E038FD7F7B40"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "fristUiKit/RoleListViewController.swift"
+            filePath = "fristUiKit/RoleContentViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "loadRoleData()"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "getLevelAttr(rid:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
