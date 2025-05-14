@@ -1,10 +1,17 @@
 package com.kai.kaiproductanndroid;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +36,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class RoleContentActivity extends AppCompatActivity {
 
@@ -62,11 +72,61 @@ public class RoleContentActivity extends AppCompatActivity {
                     .load(imageUrl)
                     .into(img);
 
+            createImages(rid);
             getLevelAttr(rid);
 
         } catch (JSONException e) {
             mLog.e(e);
         }
+    }
+
+    private void createImages(String rid)
+    {
+        APIController controller = new APIController();
+        JSONObject input = new JSONObject();
+        try {
+            input.put("rid",rid);
+        } catch (JSONException e) {
+            mLog.e(e);
+        }
+        controller.GetFgoRoleResourceImage(input, new BaseAPICallBack() {
+            @Override
+            public void CallBack(APIResult result) {
+                JSONObject json = result.GetData();
+                try {
+                    JSONObject role_resource = json.getJSONObject("role_resource");
+                    JSONArray data = role_resource.getJSONArray("data");
+                    List<String> urls = new ArrayList<>();
+                    for (int i = 0;i < data.length();i++)
+                    {
+                        JSONObject oneData = data.getJSONObject(i);
+                        String url = oneData.getString("url");
+                        urls.add(url);
+                    }
+
+                    ViewPager2 viewPager = findViewById(R.id.viewPager);
+                    ImagePagerAdapter adapter = new ImagePagerAdapter(urls);
+                    viewPager.setAdapter(adapter);
+
+// 自動切換
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            int current = viewPager.getCurrentItem();
+                            int next = (current + 1) % urls.size();
+                            viewPager.setCurrentItem(next, true);
+                            handler.postDelayed(this, 3000); // 每 3 秒切換一次
+                        }
+                    };
+                    handler.postDelayed(runnable, 3000);
+
+
+                } catch (JSONException e) {
+                    mLog.e(e);
+                }
+            }
+        });
     }
 
     private void getLevelAttr(String rid) throws JSONException {
@@ -167,5 +227,45 @@ public class RoleContentActivity extends AppCompatActivity {
                 lineChart.invalidate();
             }
         });
+    }
+
+    public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.ViewHolder> {
+        private List<String> imageList;
+
+        public ImagePagerAdapter(List<String> imageList) {
+            this.imageList = imageList;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ImageView imageView = new ImageView(parent.getContext());
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            return new ViewHolder(imageView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ImageView imageView = (ImageView) holder.itemView;
+
+            Picasso.get()
+                    .load(imageList.get(position))
+                    .into(imageView);
+        }
+
+        @Override
+        public int getItemCount() {
+            return imageList.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+            }
+        }
     }
 }

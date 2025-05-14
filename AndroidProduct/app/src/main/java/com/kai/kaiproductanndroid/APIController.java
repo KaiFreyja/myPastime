@@ -19,6 +19,11 @@ public class APIController
         sendAPI("role", input, callBack);
     }
 
+    public void GetFgoRoleResourceImage(JSONObject input,BaseAPICallBack callBack)
+    {
+        sendAPI("role_resource",input,callBack);
+    }
+
     public void GetFgoGetGender(JSONObject input, BaseAPICallBack callBack) {
         sendAPI("gender", input, callBack);
     }
