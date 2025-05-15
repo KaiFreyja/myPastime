@@ -45,7 +45,7 @@ public class TalkViewController : MonoBehaviour
         {
             download = roleImage.gameObject.AddComponent<ImageDownloader>();
         }
-        download.StartDownload(Config.IMAGE_DOMAIN + jobj["rid"] + ".png", (Texture texture) =>
+        download.StartDownload(jobj["url"].ToString(), (Texture texture) =>
         {
             roleImage.texture = texture;
         });

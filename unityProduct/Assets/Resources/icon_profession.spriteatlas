@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: icon_profession
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 21300000, guid: 62c767feaa1131946a9bd060111400fa, type: 3}
+    - {fileID: 21300000, guid: a1ff462a76482c5429844876ba735337, type: 3}
+    - {fileID: 21300000, guid: 1fd0d08e99b459b419d19508f72bca5f, type: 3}
+    - {fileID: 21300000, guid: 384fd5ee499bde245b64533cd32a6b5f, type: 3}
+    - {fileID: 21300000, guid: fea3184e3dd94fe4ba7e529b1e925490, type: 3}
+    - {fileID: 21300000, guid: 79efd92571c38b849a0538055a8f115e, type: 3}
+    - {fileID: 21300000, guid: 52d36fcc29635814db4c6300081ef571, type: 3}
+    - {fileID: 21300000, guid: 4a886b46a3a560e4899d2d475b007822, type: 3}
+    - {fileID: 21300000, guid: a3f802cd702fa724990d98ac766be20c, type: 3}
+    - {fileID: 21300000, guid: 5a97679400c56194bb3d18495ea93d72, type: 3}
+    - {fileID: 21300000, guid: 65330737bb2c4e144877aa9c74fee297, type: 3}
+    - {fileID: 21300000, guid: bb4d243fe8d82ad42b46d60b87055ea0, type: 3}
+    - {fileID: 21300000, guid: 8c7c04f4116657d4e822e976415c4460, type: 3}
+    - {fileID: 21300000, guid: c40fdcec214028a4daff01f0cead9642, type: 3}
+    - {fileID: 21300000, guid: 0f4606f851177c7468e286b81fd31122, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
+  m_RenderDataMap: {}
+  m_Tag: profession
+  m_IsVariant: 0

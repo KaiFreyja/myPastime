@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
+using UnityEngine.U2D;
 
 public class RoleContentViewController : MonoBehaviour
 {
@@ -10,8 +11,8 @@ public class RoleContentViewController : MonoBehaviour
     public GameObject ImageContent = null;
     public Text LabelName = null;
     public Text LabelDescription = null;
+    public Image iconProfession = null;
     public Button btnTalk = null;
-
     private JObject info = new JObject();
     public TalkViewController talkViewController = null;
 
@@ -40,6 +41,9 @@ public class RoleContentViewController : MonoBehaviour
     {
         LabelName.text = jobj["name"].ToString();
         LabelDescription.text = jobj["description"].ToString();
+
+        Sprite sprite = Resources.Load<Sprite>("icon_profession/"+ jobj["pid"].ToString());
+        iconProfession.sprite = sprite;
     }
 
     private void clearImageViews()

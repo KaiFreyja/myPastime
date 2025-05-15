@@ -25,6 +25,8 @@ public class RoleListViewController : MonoBehaviour
 
     public void onCreateRoleList()
     {
+        Debug.Log("onCreateRoleList");
+
         APIController controller = new APIController();
         controller.GetFgoGetRole(new JObject(),(APIResult result) =>
         {
@@ -40,7 +42,6 @@ public class RoleListViewController : MonoBehaviour
                 g.transform.SetParent(scrollContent.transform);
                 g.transform.localScale = Vector3.one;
                 g.name = ""+count;
-                count++;
                 var co = g.GetComponent<RoleListItemController>();
                 co.SetName(a["name"].ToString());
                 co.onClick += () =>
@@ -49,10 +50,15 @@ public class RoleListViewController : MonoBehaviour
                 };
                 g.SetActive(true);
                 var download = g.AddComponent<ImageDownloader>();
-                download.StartDownload(Config.IMAGE_DOMAIN + a["rid"] + ".png",(Texture texture)=>
+                download.StartDownload(a["url"].ToString(),(Texture texture)=>
                 {
                     co.SetImage(texture);
                 });
+                if (count == 0)
+                {
+                    co.onClick.Invoke();
+                }
+                count++;
             }
         });
     }

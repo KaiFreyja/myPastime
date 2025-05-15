@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Config
 {
-    public  static string API_DOMAIN = "http://192.168.0.170/api/";
-    public  static string IMAGE_DOMAIN = "http://192.168.0.170/img/role/";
+    public static string IP = "http://35.185.132.13";
+
+    public static string API_DOMAIN
+    {
+        get
+        {
+            return IP + "/api/";
+        }
+    }
 }

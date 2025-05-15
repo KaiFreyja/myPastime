@@ -42,6 +42,7 @@ public class APIClient : MonoBehaviour
         {
             string text = request.downloadHandler.text;
             JObject jobj = JObject.Parse(text);
+            Debug.Log(jobj);
             if (callBack != null)
             {
                 DataResult result = new DataResult();
@@ -81,6 +82,7 @@ public class APIClient : MonoBehaviour
         {
             string text = request.downloadHandler.text;
             JObject jobj = JObject.Parse(text);
+            Debug.Log(jobj);
             callBack?.Invoke(new DataResult { json = jobj });
         }
         else
