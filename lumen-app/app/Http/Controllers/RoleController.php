@@ -38,7 +38,18 @@ class RoleController extends Controller
             $query = $query->orderBy($table.".seq","asc") ;
             // 執行分頁
             $res = $query->paginate($perPage, ['*'], 'page', $page);
+
+			
+			$config = config('config');
+			$savePath = $config["picture_protocol"].$config["picture_domain"].'/img/role/';
             
+			foreach($res->items() as &$item)
+			{				
+				$rid = $item->rid;
+				$fileName = $rid.".png";
+				$item->url = $savePath.$fileName;
+			}
+
             return response()->json([$api_name => $res], 200);
         }
        	catch (\Exception $e) {
@@ -54,6 +65,11 @@ class RoleController extends Controller
 			$api_name = $this->getApiName($request->path());
             $res = Role::find($id);
             
+			$config = config('config');
+			$savePath = $config["picture_protocol"].$config["picture_domain"].'/img/role/';
+   			$fileName = $id.".png";
+			$res->url = $savePath.$fileName;
+
 			if($res){
 				return response()->json([$api_name => $res] , 200);
 			}

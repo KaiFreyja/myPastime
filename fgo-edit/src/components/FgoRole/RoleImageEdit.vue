@@ -21,6 +21,7 @@ import {saveRoleImage} from '@/APIController';
 export default {
   props:{
     rid : String,
+    url : String,
   },
  components: {
 
@@ -36,12 +37,11 @@ export default {
     });
 
     watch(
-      () => props.rid,
-      (newRid) => {
+      [() => props.rid,() => props.url],
+      ([newRid,newUrl]) => {
         nowRid.value = newRid;
         selectedFile.value = null;
-        //previewUrl.value = "http://172.30.20.40/AdminApi/storage/role/"+nowRid.value+".png";
-        previewUrl.value = "http://192.168.0.170/img/role/"+nowRid.value+".png";
+        previewUrl.value = newUrl;
       },
       { deep: true, immediate: true }
     );

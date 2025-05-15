@@ -1,7 +1,7 @@
 import axios from 'axios';
-
+import { config } from './include/config';
 //let domain = "http://172.30.20.40/ClientApi/api/";
-let domain = "http://192.168.0.170/api/";
+//let domain = "http://192.168.0.170/api/";
 function getRole(input,action)
 {
     sendAPI("role",input,action);
@@ -121,7 +121,7 @@ function delMapPos(input,action)
 function sendAPI(url,input,action)
 {
     console.log("sendAPI : " + "\n" + "url : " + url);
-    var uri = domain + url;   
+    var uri = config.APIDOMAIN + url;   
       const queryString = objectToQueryString(input);
   // 如果查詢字串不為空，則將其附加到 URL 上
         if (queryString) {
@@ -156,7 +156,7 @@ function postAPI(url,input,action)
 {
 console.log("postAPI : " + "\n" + "url : " + url + "\n" + JSON.stringify(input));
 
-    var uri = domain + url;
+    var uri = config.APIDOMAIN + url;
 axios.post(uri, input)
   .then(function (response) {
     console.log(response);
@@ -172,7 +172,7 @@ function putAPI(url,input,action)
 {
 console.log("putAPI : " + "\n" + "url : " + url + "\n" + JSON.stringify(input));
 
-      var uri = domain + url;
+      var uri = config.APIDOMAIN + url;
 axios.put(uri, input)
   .then(function (response) {
     console.log(response);
@@ -188,7 +188,7 @@ function deleteAPI(url,input,action)
 {
 console.log("deleteAPI : " + "\n" + "url : " + url + "\n" + JSON.stringify(input));
 
-      var uri = domain + url;
+      var uri = config.APIDOMAIN + url;
 axios.delete(uri, input)
   .then(function (response) {
     console.log(response);
@@ -203,7 +203,7 @@ axios.delete(uri, input)
 function postFile(url, input, fileObject, action) {
   console.log("postFile : " + "\n" + "url : " + url + "\n" + JSON.stringify(input) + "\n" + "File Object : ", fileObject);
 
-  var uri = domain + url;
+  var uri = config.APIDOMAIN + url;
   const formData = new FormData();
 
   // 將 input 中的其他資料添加到 FormData

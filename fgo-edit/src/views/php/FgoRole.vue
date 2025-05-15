@@ -3,7 +3,7 @@
   
 
   <h1>角色</h1> 
-<div style="display: flex;">
+<div style="display: flexll;">
   <div class="dropdown">
     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
       <div v-if="roleArray.length == 0">請選擇</div>
@@ -63,7 +63,7 @@
 
   <button type="button" class="btn btn-primary" v-on:click="clickModifyRole">修改使用者</button>
   
-  <RoleImageEdit :rid="rid"/>
+  <RoleImageEdit :rid="rid" :url="url"/>
   <FeatureEdit :rid="rid"/>
   <RoleImageUploadImage :rid="rid"/>
   <LevelAttrEdit :rid="rid"/>
@@ -103,6 +103,7 @@ export default {
 
     const roleData = ref();
     const rid = ref("");
+    const url = ref("");
     const name = ref("");
     const description = ref("");
 
@@ -185,6 +186,7 @@ export default {
           roleData.value = data;
           name.value = data.name;
           rid.value = data.rid;
+          url.value = data.url;
           description.value = data.description;
           var pid = data.pid;        
           var gid = data.gid;
@@ -267,6 +269,7 @@ export default {
       */
 
         rid,
+        url,
         name,
         description,
 
