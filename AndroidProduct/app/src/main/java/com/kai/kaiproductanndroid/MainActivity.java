@@ -7,18 +7,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.credentials.GetCredentialRequest;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import com.Tools.API.APIResult;
-import com.Tools.API.BaseAPICallBack;
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.kai.kaiproductanndroid.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +26,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Instantiate a Google sign-in request
+        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(true)
+                .setServerClientId(getString(R.string.default_web_client_id))
+                .build();
+
+// Create the Credential Manager request
+        GetCredentialRequest request = new GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -47,39 +56,17 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                APIController controller = new APIController();
-                controller.GetFgoGetRole(new JSONObject(), new BaseAPICallBack() {
-                    @Override
-                    public void CallBack(APIResult result) {
-                        JSONObject json = result.GetData();
-                        String text = "null";
-                        if(json != null)
-                        {
-                            text = json.toString();
-                        }
-                        tv.setText(text);
-                    }
-                });
+                Intent intent = new Intent(MainActivity.this,GachaponActivity.class);
+                startActivity(intent);
             }
         });
 
-        Button btnGender = findViewById(R.id.btnGender);
-        btnGender.setOnClickListener(new View.OnClickListener() {
+        Button btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                APIController controller = new APIController();
-                controller.GetFgoGetGender(new JSONObject(), new BaseAPICallBack() {
-                    @Override
-                    public void CallBack(APIResult result) {
-                        JSONObject json = result.GetData();
-                        String text = "null";
-                        if(json != null)
-                        {
-                            text = json.toString();
-                        }
-                        tv.setText(text);
-                    }
-                });
+                Intent intent = new Intent(MainActivity.this,FirebaseLoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -89,20 +76,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,ProfessionATkRateActivity.class);
                 startActivity(intent);
-                /*
-                APIController controller = new APIController();
-                controller.GetFgoGetProfession(new JSONObject(), new BaseAPICallBack() {
-                    @Override
-                    public void CallBack(APIResult result) {
-                        JSONObject json = result.GetData();
-                        String text = "null";
-                        if(json != null)
-                        {
-                            text = json.toString();
-                        }
-                        tv.setText(text);
-                    }
-                });*/
             }
         });
 

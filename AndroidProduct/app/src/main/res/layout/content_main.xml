@@ -19,19 +19,19 @@
 
         <Button
             android:id="@+id/btnApi"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="動畫" />
 
         <Button
-            android:id="@+id/btnGender"
-            android:layout_width="wrap_content"
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="性別" />
+            android:text="登入" />
 
         <Button
             android:id="@+id/btnProfession"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="職階" />
 

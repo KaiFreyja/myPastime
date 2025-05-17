@@ -81,17 +81,19 @@ public class RoleListActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String rid = "";
             String name = "";
+            String url = "";
             JSONObject json = new JSONObject();
             try {
                 json = list.getJSONObject(position);
                 rid = json.getString("rid");
                 name = json.getString("name");
+                url = json.getString("url");
             } catch (Exception e) {
                 mLog.e(e);
             }
 
             holder.tvName.setText(name);
-            String imageUrl = config.IMAGE_DOMAIN + rid + ".png";
+            String imageUrl = url;
             Picasso.get()
                     .load(imageUrl)
                     .into(holder.imgRole);

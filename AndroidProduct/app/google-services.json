@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "901668414407",
+    "project_id": "fgobase-1125b",
+    "storage_bucket": "fgobase-1125b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901668414407:android:950b845868e732a1e1efe2",
+        "android_client_info": {
+          "package_name": "com.kai.kaiproductanndroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901668414407-56erap76i5dldqb88vru85btsh4cc510.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kai.kaiproductanndroid",
+            "certificate_hash": "103cbdd52820db5782673466882149d6be1ede15"
+          }
+        },
+        {
+          "client_id": "901668414407-0ns1sog2qcqr6nhqtr6qvtbs0m29lp1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl8dUPyi-PUqn-VE17UctPbupNMgL9hxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901668414407-0ns1sog2qcqr6nhqtr6qvtbs0m29lp1d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

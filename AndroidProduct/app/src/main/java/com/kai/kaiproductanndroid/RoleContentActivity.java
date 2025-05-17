@@ -67,7 +67,7 @@ public class RoleContentActivity extends AppCompatActivity {
             tvDescription.setText(description);
             tvGender.setText(gid);
             tvProession.setText(pid);
-            String imageUrl = config.IMAGE_DOMAIN + rid + ".png";
+            String imageUrl = json.getString("url");
             Picasso.get()
                     .load(imageUrl)
                     .into(img);
