@@ -57,7 +57,7 @@ public class TalkViewController : MonoBehaviour
     private void init(JObject jobj)
     {
         string name = jobj["description"].ToString();
-        string text = "重現在開始你是FGO的"+ name + "，請作為" + name + "跟我對話";
+        string text = "從現在開始你是FGO的"+ name + "，請作為" + name + "跟我對話";
         JObject input = new JObject();
         input.Add("uid", GlobalData.uid);
         input.Add("ask", text);
