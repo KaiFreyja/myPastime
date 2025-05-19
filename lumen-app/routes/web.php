@@ -54,5 +54,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/submit', 'ApiController@submitData');
     */
     $router_path = dirname(__FILE__); 
+    include $router_path."/web_user.php";
     include $router_path."/web_fgo.php";
 });
