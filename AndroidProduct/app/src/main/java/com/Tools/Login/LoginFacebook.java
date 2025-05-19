@@ -72,7 +72,7 @@ public class LoginFacebook implements ILogin
                     // 登入成功，更新 UI 或跳轉頁面
                     LoginResult result = new LoginResult();
                     result.isSuccess = true;
-                    result.oid = token.getToken();
+                    result.oid = user.getUid();
                     result.name = user.getDisplayName();
                     result.phone = user.getPhoneNumber();
                     result.email = user.getEmail();

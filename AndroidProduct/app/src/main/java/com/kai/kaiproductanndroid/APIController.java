@@ -1,4 +1,6 @@
 package com.kai.kaiproductanndroid;
+import android.util.Log;
+
 import com.Tools.API.BaseAPICallBack;
 import com.Tools.API.FetchJsonTask;
 import com.Tools.API.PostJsonTask;
@@ -13,6 +15,11 @@ public class APIController
 {
     public void GetKaiTest(JSONObject input, BaseAPICallBack callBack) {
         sendAPI("kai_test", input, callBack);
+    }
+
+    public void LoginThird(JSONObject input,BaseAPICallBack callBack)
+    {
+        postAPI("login_third",input,callBack);
     }
 
     public void GetFgoGetRole(JSONObject input, BaseAPICallBack callBack) {

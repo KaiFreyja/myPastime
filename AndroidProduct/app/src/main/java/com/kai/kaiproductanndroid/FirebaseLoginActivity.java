@@ -1,10 +1,13 @@
 package com.kai.kaiproductanndroid;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Tools.API.APIResult;
+import com.Tools.API.BaseAPICallBack;
 import com.Tools.Login.ILogin;
 import com.Tools.Login.LoginCallback;
 import com.Tools.Login.LoginFacebook;
@@ -12,12 +15,16 @@ import com.Tools.Login.LoginGoogle;
 import com.Tools.Login.LoginResult;
 import com.Tools.mLog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class FirebaseLoginActivity extends AppCompatActivity {
     ILogin login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_login);
+
 
         Button btnLoginGoogle = findViewById(R.id.btnLoginGoogle);
         btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +54,41 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 if (result.isSuccess) {
                     mLog.d("result.oid : " + result.oid);
                     mLog.d("result.name : " + result.name);
+                    int tltid = 0;
+                    if (login instanceof LoginGoogle) {
+                        tltid = 1;
+                    } else if (login instanceof LoginFacebook) {
+                        tltid = 2;
+                    }
+
+                    if (tltid == 0) {
+                        mLog.d("no this third Login");
+                        return;
+                    }
+
+
+                    JSONObject input = new JSONObject();
+                    try {
+                        input.put("oid", result.oid);
+                        input.put("tltid", tltid);
+                    } catch (JSONException e) {
+                        mLog.e(e);
+                    }
+
+                    APIController controller = new APIController();
+                    controller.LoginThird(input, new BaseAPICallBack() {
+                        @Override
+                        public void CallBack(APIResult result) {
+                            JSONObject json = result.GetData();
+                            try {
+                                JSONObject login_third = json.getJSONObject("login_third");
+                                GlobalData.uid = login_third.getInt("uid");
+                                mLog.d("登入" + login_third);
+                            } catch (JSONException e) {
+                                mLog.e(e);
+                            }
+                        }
+                    });
                 }
                 else
                 {

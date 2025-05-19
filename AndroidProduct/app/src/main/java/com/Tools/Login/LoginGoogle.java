@@ -19,13 +19,22 @@ import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.ClearCredentialException;
 import androidx.credentials.exceptions.GetCredentialException;
 
+import com.Tools.API.APIResult;
+import com.Tools.API.BaseAPICallBack;
+import com.Tools.mLog;
+import com.google.android.gms.common.internal.GmsLogger;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.kai.kaiproductanndroid.APIController;
+import com.kai.kaiproductanndroid.GlobalData;
 import com.kai.kaiproductanndroid.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.concurrent.Executors;
 
@@ -140,11 +149,10 @@ public class LoginGoogle implements ILogin {
                         {
                             LoginResult result = new LoginResult();
                             result.isSuccess = true;
-                            result.oid = idToken;
+                            result.oid = user.getUid();
                             result.name = user.getDisplayName();
                             result.phone = user.getPhoneNumber();
                             result.email = user.getEmail();
-
                             callback.LoginFinish(result);
                         }
 
