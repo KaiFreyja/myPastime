@@ -31,7 +31,7 @@ return "aa";
             
             $api_name = $this->getApiName($request->path());
             $this->validate($request, [
-                'oid' => 'required|max:32',
+                'oid' => 'required',
                 'tltid' => 'required|integer'
             ]);
 

@@ -30,6 +30,7 @@ class TalkGroupController extends Controller
             $api_searchs = $this->getApiSearchs($request);
             $perPage = $request->input('per_page', 1000); // 預設每頁 1000 筆
             $page = $request->input('page', 1); // 預設第 1 頁
+			$uid = @$api_searchs["uid"];
 
             $model = new TalkGroup();
             $pky = $model->primaryKey;
@@ -37,6 +38,10 @@ class TalkGroupController extends Controller
             $table = $model->table;
             $query = DB::connection($connection)->table($table);
             $query = $query->select($table.'.*');
+			if(isset($uid))
+			{
+				$query = $query->where("uid","=",$uid);
+			}
             $query = $query->where("switch","=","1");
             $query = $query->orderBy($table.".seq","asc") ;
             
@@ -197,7 +202,6 @@ $this->validate($request, [
 
     
 	public function postSendAsk(Request $request){
-
 		try {
 			$api_name = $this->getApiName($request->path());
 			$uid = $request->input("uid");
@@ -222,8 +226,8 @@ $this->validate($request, [
 			{
 				$model = new TalkGroup;
 				$model->uid = $uid;
-				$model->name = $ask;
-				$model->description = $ask;
+				$model->name = substr($ask, 0, 30);
+				$model->description = substr($ask, 0, 250);
 				$model->save();
 				$tgid = $model->tgid;
 			}
