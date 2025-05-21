@@ -21,8 +21,16 @@
             $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
             $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
 
-            $apiName = "third_login_type";
-            $objName = "ThirdLoginType";
+            $apiName = "login_type";
+            $objName = "LoginType";
+            $router->get($apiName, $objName.'Controller@getAll'.$objName);
+            $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);            
+            $router->post($apiName, $objName.'Controller@post'.$objName);
+            $router->put($apiName.'/{id}', $objName.'Controller@put'.$objName);
+            $router->delete($apiName.'/{id}', $objName.'Controller@delete'.$objName);
+
+            $apiName = "login_history";
+            $objName = "LoginHistory";
             $router->get($apiName, $objName.'Controller@getAll'.$objName);
             $router->get($apiName.'/{id}', $objName.'Controller@getOne'.$objName);            
             $router->post($apiName, $objName.'Controller@post'.$objName);

@@ -5,14 +5,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ThirdLoginType extends Model
+class LoginHistory extends Model
 {
 	// connetcion db 
-	public $connection = 'fgo_user';
+	public $connection = 'fgo_history';
 	// 如果不指定預設會抓 funs 
-	public $table = 'fgo_third_login_type';
+	public $table = 'fgo_login_history';
 	// pky 不指定預設會抓 ID  
-	public $primaryKey = 'tltid';
+	public $primaryKey = 'lhid';
 	// pky 不是整數時
 	//protected $keyType = 'string';
 	// 關掉 Autoincrement 
@@ -27,7 +27,9 @@ class ThirdLoginType extends Model
 	* @var array
 	*/
 	public $fillable = [
-	   'tltid',  
+	   'lhid',
+       'uid',
+       'ltid',
 	   'name', 
 	   'description',
 	   'seq', 

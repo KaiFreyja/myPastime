@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\ThirdLoginType;
+use App\Models\LoginHistory;
 
-class ThirdLoginTypeController extends Controller
+class LoginHistoryController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,7 +17,7 @@ class ThirdLoginTypeController extends Controller
         //
     }
 
-    public function getAllThirdLoginType(Request $request)
+    public function getAllLoginHistory(Request $request)
     {
         try
         {
@@ -26,20 +26,15 @@ class ThirdLoginTypeController extends Controller
             $api_params = $this->getApiParams($request);
             $api_searchs = $this->getApiSearchs($request);
             $perPage = $request->input('per_page', 1000); // 預設每頁 1000 筆
-            $page = $request->input('page', 1); // 預設第 1 頁			
-			$tgid = @$api_searchs["tgid"];
+            $page = $request->input('page', 1); // 預設第 1 頁
 
-            $model = new ThirdLoginType();
+            $model = new LoginHistory();
             $pky = $model->primaryKey;
             $connection = $model->connection;
             $table = $model->table;
-            $query = DB::connection($connection)->table($table);			
+            $query = DB::connection($connection)->table($table);
             $query = $query->select($table.'.*');
             $query = $query->where("switch","=","1");
-			if($tgid != '')
-			{
-				$query = $query->where("tgid","=",$tgid);
-			}
             $query = $query->orderBy($table.".seq","asc") ;
             // 執行分頁
             $res = $query->paginate($perPage, ['*'], 'page', $page);
@@ -51,14 +46,13 @@ class ThirdLoginTypeController extends Controller
 		}
     }
 
-    public function getOneThirdLoginType(Request $request,$id)
-    {
+    	public function getOneLoginHistory(Request $request,$id){
 		try {
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
 			$api_name = $this->getApiName($request->path());
-            $res = ThirdLoginType::find($id);
+            $res = Feature::find($id);
             
 			if($res){
 				return response()->json([$api_name => $res] , 200);
@@ -71,8 +65,12 @@ class ThirdLoginTypeController extends Controller
 		}
 	}
 
-
-    public function postThirdLoginType(Request $request){
+    	/**
+	 * Post one Ebooks.
+	 *
+	 * @return Response
+	 */
+	public function postLoginHistory(Request $request){
 
 		$api_name = $this->getApiName($request->path());
 		$this->validate($request, [
@@ -82,7 +80,7 @@ class ThirdLoginTypeController extends Controller
 
 		try {
 
-			$query = new ThirdLoginType ; 
+			$query = new LoginHistory ; 
 			$pky = $query->primaryKey ;
             $query = $this->postInsertFieldQuery($request,$query) ; 
 
@@ -108,7 +106,7 @@ class ThirdLoginTypeController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function putThirdLoginType(Request $request,$id){
+	public function putLoginHistory(Request $request,$id){
 		$api_name = $this->getApiName($request->path());
 $this->validate($request, [
     'code' => 'integer',
@@ -122,19 +120,19 @@ $this->validate($request, [
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
-			$model = new ThirdLoginType ; 
+			$model = new LoginHistory ; 
 			$pky = $model->primaryKey ;
 			$selectItems = $request->selectItems;
 			$sItems = json_decode($selectItems);
 	
-			$check_id = ThirdLoginType::where($pky , $id)->get();
+			$check_id = LoginHistory::where($pky , $id)->get();
 			if(!$check_id || count($check_id) == 0){
 				return response()->json(['message' => '此ID不存在。'], 422);
 			}
 			if($request->code){
-				$check = ThirdLoginType::where($pky,$id)->first();
+				$check = LoginHistory::where($pky,$id)->first();
 				if($check->code != $request->code){
-				 $check_code = ThirdLoginType::where('code',$request->code)->get();
+				 $check_code = LoginHistory::where('code',$request->code)->get();
 				 if($check_code && count($check_code) > 0){
 				  return response()->json(['message' => '此代碼已存在，請更改後重新修改'], 422);
 				 }
@@ -179,21 +177,19 @@ $this->validate($request, [
 	 *
 	 * @return Response
 	 */
-	public function deleteThirdLoginType(Request $request,$id){
+	public function deleteLoginHistory(Request $request,$id){
 		$api_name = $this->getApiName($request->input("uri"));
 		
 		try {
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
-			$model = new ThirdLoginType ; 
+			$model = new LoginHistory ; 
 			$pky = $model->primaryKey ;
-			$query = ThirdLoginType::where($pky , $id)->delete();
+			$query = LoginHistory::where($pky , $id)->delete();
 			return response()->json([$api_name => $query], 200);
 		} catch (\Exception $e) {
 			return response()->json(['message' => $e->getMessage()], 409);
 		}
 	}
-
-    
 }
