@@ -5,7 +5,7 @@
         <input
           type="range"
           min="0"
-          max="2000"
+          max="20000"
           :value="slider.value"
           orient="vertical"
           @input="updateSliderValue(index, $event.target.value)"
@@ -80,7 +80,7 @@ export default {
       const nowValue = newSliders[i].value;
       const nextValue = newSliders[i + 1].value;
       if (nowValue > nextValue) {
-        newSliders[i + 1].value = Math.min(2000, nowValue + 10); // 確保不大於 2000
+        newSliders[i + 1].value = Math.min(20000, nowValue + 10); // 確保不大於 2000
       }
     }
   }
