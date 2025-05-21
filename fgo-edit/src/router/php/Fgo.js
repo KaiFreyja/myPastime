@@ -36,6 +36,12 @@ let Fgo = [
     name: 'FgoBuff',
     component: () => import('@/views/php/FgoBuff.vue')
   },
+  {
+    // Buff
+    path: '/FgoGachapon',
+    name: 'FgoGachapon',
+    component: () => import('@/views/php/FgoGachapon.vue')
+  },
   /*
   {
     // 使用教學
