@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\LoginType;
+use App\Models\GachaponItem;
 
-class LoginTypeController extends Controller
+class GachaponItemController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,7 +17,7 @@ class LoginTypeController extends Controller
         //
     }
 
-    public function getAllLoginType(Request $request)
+    public function getAllGachaponItem(Request $request)
     {
         try
         {
@@ -29,7 +29,7 @@ class LoginTypeController extends Controller
             $page = $request->input('page', 1); // 預設第 1 頁			
 			$tgid = @$api_searchs["tgid"];
 
-            $model = new LoginType();
+            $model = new GachaponItem();
             $pky = $model->primaryKey;
             $connection = $model->connection;
             $table = $model->table;
@@ -51,14 +51,14 @@ class LoginTypeController extends Controller
 		}
     }
 
-    public function getOneLoginType(Request $request,$id)
+    public function getOneGachaponItem(Request $request,$id)
     {
 		try {
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
 			$api_name = $this->getApiName($request->path());
-            $res = LoginType::find($id);
+            $res = GachaponItem::find($id);
             
 			if($res){
 				return response()->json([$api_name => $res] , 200);
@@ -72,7 +72,7 @@ class LoginTypeController extends Controller
 	}
 
 
-    public function postLoginType(Request $request){
+    public function postGachaponItem(Request $request){
 
 		$api_name = $this->getApiName($request->path());
 		$this->validate($request, [
@@ -82,7 +82,7 @@ class LoginTypeController extends Controller
 
 		try {
 
-			$query = new LoginType ; 
+			$query = new GachaponItem ; 
 			$pky = $query->primaryKey ;
             $query = $this->postInsertFieldQuery($request,$query) ; 
 
@@ -108,7 +108,7 @@ class LoginTypeController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function putLoginType(Request $request,$id){
+	public function putGachaponItem(Request $request,$id){
 		$api_name = $this->getApiName($request->path());
 $this->validate($request, [
     'code' => 'integer',
@@ -122,19 +122,19 @@ $this->validate($request, [
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
-			$model = new LoginType ; 
+			$model = new GachaponItem ; 
 			$pky = $model->primaryKey ;
 			$selectItems = $request->selectItems;
 			$sItems = json_decode($selectItems);
 	
-			$check_id = LoginType::where($pky , $id)->get();
+			$check_id = GachaponItem::where($pky , $id)->get();
 			if(!$check_id || count($check_id) == 0){
 				return response()->json(['message' => '此ID不存在。'], 422);
 			}
 			if($request->code){
-				$check = LoginType::where($pky,$id)->first();
+				$check = GachaponItem::where($pky,$id)->first();
 				if($check->code != $request->code){
-				 $check_code = LoginType::where('code',$request->code)->get();
+				 $check_code = GachaponItem::where('code',$request->code)->get();
 				 if($check_code && count($check_code) > 0){
 				  return response()->json(['message' => '此代碼已存在，請更改後重新修改'], 422);
 				 }
@@ -179,16 +179,16 @@ $this->validate($request, [
 	 *
 	 * @return Response
 	 */
-	public function deleteLoginType(Request $request,$id){
+	public function deleteGachaponItem(Request $request,$id){
 		$api_name = $this->getApiName($request->input("uri"));
 		
 		try {
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
-			$model = new LoginType ; 
+			$model = new GachaponItem ; 
 			$pky = $model->primaryKey ;
-			$query = LoginType::where($pky , $id)->delete();
+			$query = GachaponItem::where($pky , $id)->delete();
 			return response()->json([$api_name => $query], 200);
 		} catch (\Exception $e) {
 			return response()->json(['message' => $e->getMessage()], 409);

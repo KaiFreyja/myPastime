@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\LoginType;
+use App\Models\GachaponHistoryGroup;
 
-class LoginTypeController extends Controller
+class GachaponHistoryGroupController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,7 +17,7 @@ class LoginTypeController extends Controller
         //
     }
 
-    public function getAllLoginType(Request $request)
+    public function getAllGachaponHistoryGroup(Request $request)
     {
         try
         {
@@ -29,7 +29,7 @@ class LoginTypeController extends Controller
             $page = $request->input('page', 1); // 預設第 1 頁			
 			$tgid = @$api_searchs["tgid"];
 
-            $model = new LoginType();
+            $model = new GachaponHistoryGroup();
             $pky = $model->primaryKey;
             $connection = $model->connection;
             $table = $model->table;
@@ -51,14 +51,14 @@ class LoginTypeController extends Controller
 		}
     }
 
-    public function getOneLoginType(Request $request,$id)
+    public function getOneGachaponHistoryGroup(Request $request,$id)
     {
 		try {
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
 			$api_name = $this->getApiName($request->path());
-            $res = LoginType::find($id);
+            $res = GachaponHistoryGroup::find($id);
             
 			if($res){
 				return response()->json([$api_name => $res] , 200);
@@ -72,7 +72,7 @@ class LoginTypeController extends Controller
 	}
 
 
-    public function postLoginType(Request $request){
+    public function postGachaponHistoryGroup(Request $request){
 
 		$api_name = $this->getApiName($request->path());
 		$this->validate($request, [
@@ -82,7 +82,7 @@ class LoginTypeController extends Controller
 
 		try {
 
-			$query = new LoginType ; 
+			$query = new GachaponHistoryGroup ; 
 			$pky = $query->primaryKey ;
             $query = $this->postInsertFieldQuery($request,$query) ; 
 
@@ -108,7 +108,7 @@ class LoginTypeController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function putLoginType(Request $request,$id){
+	public function putGachaponHistoryGroup(Request $request,$id){
 		$api_name = $this->getApiName($request->path());
 $this->validate($request, [
     'code' => 'integer',
@@ -122,19 +122,19 @@ $this->validate($request, [
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
-			$model = new LoginType ; 
+			$model = new GachaponHistoryGroup ; 
 			$pky = $model->primaryKey ;
 			$selectItems = $request->selectItems;
 			$sItems = json_decode($selectItems);
 	
-			$check_id = LoginType::where($pky , $id)->get();
+			$check_id = GachaponHistoryGroup::where($pky , $id)->get();
 			if(!$check_id || count($check_id) == 0){
 				return response()->json(['message' => '此ID不存在。'], 422);
 			}
 			if($request->code){
-				$check = LoginType::where($pky,$id)->first();
+				$check = GachaponHistoryGroup::where($pky,$id)->first();
 				if($check->code != $request->code){
-				 $check_code = LoginType::where('code',$request->code)->get();
+				 $check_code = GachaponHistoryGroup::where('code',$request->code)->get();
 				 if($check_code && count($check_code) > 0){
 				  return response()->json(['message' => '此代碼已存在，請更改後重新修改'], 422);
 				 }
@@ -179,16 +179,16 @@ $this->validate($request, [
 	 *
 	 * @return Response
 	 */
-	public function deleteLoginType(Request $request,$id){
+	public function deleteGachaponHistoryGroup(Request $request,$id){
 		$api_name = $this->getApiName($request->input("uri"));
 		
 		try {
 			if (!is_numeric($id) || $id == 0) {
 				throw new \InvalidArgumentException('錯誤id:'.$id);
 			}
-			$model = new LoginType ; 
+			$model = new GachaponHistoryGroup ; 
 			$pky = $model->primaryKey ;
-			$query = LoginType::where($pky , $id)->delete();
+			$query = GachaponHistoryGroup::where($pky , $id)->delete();
 			return response()->json([$api_name => $query], 200);
 		} catch (\Exception $e) {
 			return response()->json(['message' => $e->getMessage()], 409);
