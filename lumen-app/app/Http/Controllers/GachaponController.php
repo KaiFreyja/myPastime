@@ -153,9 +153,93 @@ class GachaponController extends Controller
 
     public function gachaponTen(Request $request)
     {
-        $api_name = $this->getApiName($request->path());
-        $ggid = $request->input("ggid");
+        try
+        {
+            $api_name = $this->getApiName($request->path());
+            $uid = $request->input("uid");
+            $ggid = $request->input("ggid");
 
-        return $ggid;
+            $model = GachaponGroup::find($ggid);
+            $rwtid = $model->rwtid;
+            $model = RarityWeights::where("rwtid","=",$rwtid);
+            $res = $model->get();
+
+            //紀錄
+            $model = new GachaponHistoryGroup();
+            $model->uid = $uid;
+            $model->save();
+            $ghgid = $model->ghgid;
+
+            $results = [];
+            for($i = 0;$i < 10;$i++)
+            {
+                //取得出貨稀有度
+                $weight = 0;
+                foreach($res as $item)
+                {
+                    $weight += $item->weight;
+                }
+                $rand = rand(1,$weight);
+
+                $target = 0;
+                $rarity = 0;
+                foreach($res as $item)
+                {
+                    $target += $item->weight;
+                    if($target >= $rand)
+                    {
+                        $rarity = $item->rarity;
+                        break;
+                    }
+                }
+
+                //取得出貨卡片
+                $query = GachaponItem::where("ggid","=",$ggid);
+                $query = $query->where("rarity","=",$rarity);
+                $items = $query->get();
+                $weight = 0;
+                foreach($items as $item)
+                {
+                    $weight += $item->weight;
+                }
+                $rand = rand(1,$weight);
+                $target = 0;
+                $targetItem;
+                foreach($items as $item)
+                {
+                    $target += $item->weight;
+                    if($target >= $rand)
+                    {
+                        $targetItem = $item;
+                        break;
+                    }
+                }
+
+                //紀錄卡片
+                $model = new GachaponHistory();
+                $model->ghgid = $ghgid;
+                $model->giid = $targetItem->giid;
+                $model->save();
+            
+                $gtid = $targetItem->gtid;
+                $value = $targetItem->gtid_value;
+                switch($gtid)
+                {
+                    case 1:
+                        //英靈
+                        $role = app(RoleController::class)->getOneRole($request,$value);
+                        $data = $role->getData(true);
+                        $results[] = $data[$api_name];
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return response()->json([$api_name => $results], 200);    
+        }
+       	catch (\Exception $e) {
+			return response()->json(['message' => $e->getMessage()], 409);
+		}
     }
 }
