@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using UnityEngine.U2D;
 
-public class RoleContentViewController : MonoBehaviour
+public class RoleContentViewController : ViewController
 {
     public RoleContentImageItemController item = null;
     public GameObject ImageContent = null;
@@ -14,17 +14,24 @@ public class RoleContentViewController : MonoBehaviour
     public Image iconProfession = null;
     public Button btnTalk = null;
     private JObject info = new JObject();
-    public TalkViewController talkViewController = null;
+    //public TalkViewController talkViewController = null;
 
-    private void Start()
+    protected override void init()
     {
+        base.init();
         btnTalk.onClick.AddListener(new UnityEngine.Events.UnityAction(openTalk));
         item.gameObject.SetActive(false);
     }
 
+    protected override void open(object obj)
+    {
+        open(obj as JObject);
+    }
+
     private void openTalk()
     {
-        talkViewController.open(info);
+        ViewController.GetViewController(typeof(TalkViewController)).show(info);
+        //talkViewController.open(info);
     }
 
     public void open(JObject jobj)

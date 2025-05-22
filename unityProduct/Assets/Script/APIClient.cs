@@ -38,27 +38,17 @@ public class APIClient : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
-        if (request.result == UnityWebRequest.Result.Success)
+        string text = request.downloadHandler.text;
+        JObject jobj = JObject.Parse(text);
+        Debug.Log(jobj);
+
+        try
         {
-            string text = request.downloadHandler.text;
-            JObject jobj = JObject.Parse(text);
-            Debug.Log(jobj);
-            if (callBack != null)
-            {
-                DataResult result = new DataResult();
-                result.json = jobj;
-                callBack.Invoke(result);
-            }
+            callBack?.Invoke(new DataResult { json = jobj });
         }
-        else
+        catch (System.Exception ex)
         {
-            if (callBack != null)
-            {
-                DataResult result = new DataResult();
-                result.json = new JObject();
-                callBack.Invoke(result);
-            }
-            Debug.LogError("Error: " + request.error);
+            Debug.LogError(ex);
         }
 
         Destroy(this.gameObject);
@@ -89,19 +79,6 @@ public class APIClient : MonoBehaviour
         {
             Debug.LogError(ex);
         }
-        /*
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            string text = request.downloadHandler.text;
-            JObject jobj = JObject.Parse(text);
-            Debug.Log(jobj);
-            callBack?.Invoke(new DataResult { json = jobj });
-        }
-        else
-        {
-            Debug.LogError("POST Error: " + request.error);
-            callBack?.Invoke(new DataResult { json = new JObject() });
-        }*/
 
         Destroy(this.gameObject);
     }

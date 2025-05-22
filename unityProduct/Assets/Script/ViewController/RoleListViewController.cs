@@ -4,23 +4,23 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using UnityEngine.EventSystems;
 
-public class RoleListViewController : MonoBehaviour
+public class RoleListViewController : ViewController
 {
 
     public RoleListItemController item = null;
     public GameObject scrollContent = null;
 
-    // Start is called before the first frame update
-    void Start()
+    protected override void init()
     {
+        base.init();
         item.gameObject.SetActive(false);
         onCreateRoleList();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void open(object obj)
     {
-        
+        base.open(obj);
+        onCreateRoleList();
     }
 
     public void onCreateRoleList()
@@ -46,7 +46,8 @@ public class RoleListViewController : MonoBehaviour
                 co.SetName(a["name"].ToString());
                 co.onClick += () =>
                 {
-                    FindObjectOfType<RoleContentViewController>().open(a as JObject);
+                    ViewController.GetViewController(typeof(RoleContentViewController)).show(a as JObject);
+                    //FindObjectOfType<RoleContentViewController>().open(a as JObject);
                 };
                 g.SetActive(true);
                 var download = g.AddComponent<ImageDownloader>();
