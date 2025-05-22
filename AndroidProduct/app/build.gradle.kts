@@ -38,6 +38,25 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    flavorDimensions("environment");
+    productFlavors {
+        create("Intranet") {
+            dimension = "environment";
+            resValue("string", "is_log", "Y");
+            resValue("string", "app_name", "功能學習(內網)");
+            resValue("string", "domain", "\"http://192.168.0.170/api/\"");
+            signingConfig = signingConfigs.getByName("debug");
+        }
+
+        create("Extranet") {
+            dimension = "environment";
+            resValue("string", "is_log", "Y");
+            resValue("string", "app_name", "功能學習(外網)");
+            resValue("string", "domain", "\"http://35.185.132.13/api/\"");
+            signingConfig = signingConfigs.getByName("debug");
+        }
+    }
 }
 
 dependencies {

@@ -1,6 +1,7 @@
 package com.kai.kaiproductanndroid;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        config.API_DOMAIN = getString(R.string.domain);
+
         // Instantiate a Google sign-in request
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(true)
@@ -42,27 +45,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-        Button btnJump = findViewById(R.id.btnjump);
-        btnJump.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,RoleListActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        TextView tv = findViewById(R.id.textView);
-        Button btn = findViewById(R.id.btnApi);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,GachaponActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button btnLogin = findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        Button btn_goto_login = findViewById(R.id.btn_goto_login);
+        btn_goto_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,FirebaseLoginActivity.class);
@@ -70,32 +54,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnProfession = findViewById(R.id.btnProfession);
-        btnProfession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ProfessionATkRateActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button btnMapPos = findViewById(R.id.btnMapPos);
-        btnMapPos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MapPosActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button btnAiTalk = findViewById(R.id.btn_ai_talk);
-        btnAiTalk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AiTalkMainActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override

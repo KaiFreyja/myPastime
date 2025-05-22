@@ -54,14 +54,14 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 if (result.isSuccess) {
                     mLog.d("result.oid : " + result.oid);
                     mLog.d("result.name : " + result.name);
-                    int tltid = 0;
+                    int ltid = 0;
                     if (login instanceof LoginGoogle) {
-                        tltid = 1;
+                        ltid = 1;
                     } else if (login instanceof LoginFacebook) {
-                        tltid = 2;
+                        ltid = 2;
                     }
 
-                    if (tltid == 0) {
+                    if (ltid == 0) {
                         mLog.d("no this third Login");
                         return;
                     }
@@ -70,7 +70,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                     JSONObject input = new JSONObject();
                     try {
                         input.put("oid", result.oid);
-                        input.put("tltid", tltid);
+                        input.put("ltid", ltid);
                     } catch (JSONException e) {
                         mLog.e(e);
                     }
@@ -84,6 +84,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                                 JSONObject login_third = json.getJSONObject("login_third");
                                 GlobalData.uid = login_third.getInt("uid");
                                 mLog.d("登入" + login_third);
+                                gotoHome();
                             } catch (JSONException e) {
                                 mLog.e(e);
                             }
@@ -96,6 +97,12 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private  void  gotoHome()
+    {
+        Intent intent = new Intent(FirebaseLoginActivity.this,HomeActivity.class);
+        startActivity(intent);
     }
 
     @Override

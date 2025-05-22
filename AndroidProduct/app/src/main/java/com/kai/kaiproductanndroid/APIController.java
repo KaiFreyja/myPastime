@@ -69,6 +69,16 @@ public class APIController
         postAPI("talk_group_ask",input,callBack);
     }
 
+    public void SendGachaponOne(JSONObject input,BaseAPICallBack callBack)
+    {
+        postAPI("gachapon_one",input,callBack);
+    }
+
+    public void SendGachaponTen(JSONObject input,BaseAPICallBack callBack)
+    {
+        postAPI("gachapon_ten",input,callBack);
+    }
+
     private void sendAPI(String url,JSONObject input,BaseAPICallBack callBack) {
         String p = "";
         if(input.length() > 0) {

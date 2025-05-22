@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".GachaponActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="74dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
-
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieView"
         android:layout_width="400dp"
@@ -60,11 +50,44 @@
         android:layout_marginBottom="307dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_fileName="Animation - 1747278819960.json"
         app:lottie_loop="false"
         tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/img_card"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginEnd="136dp"
+        app:layout_constraintBottom_toBottomOf="@+id/lottieView"
+        app:layout_constraintEnd_toEndOf="@+id/lottieView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/lottieView"
+        app:layout_constraintTop_toTopOf="@+id/lottieView"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+
+    <Button
+        android:id="@+id/btn_gachapon_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="抽1次"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_gachapon_ten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="抽10次"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
