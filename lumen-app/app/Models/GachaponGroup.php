@@ -27,7 +27,8 @@ class GachaponGroup extends Model
 	* @var array
 	*/
 	public $fillable = [
-	   'ggid',  
+	   'ggid',
+	   'rwtid',  
 	   'name', 
 	   'description',
 	   'seq', 

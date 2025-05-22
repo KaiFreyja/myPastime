@@ -5,14 +5,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GachaponItem extends Model
+class RarityWeights extends Model
 {
 	// connetcion db 
 	public $connection = 'fgo_gachapon';
 	// 如果不指定預設會抓 funs 
-	public $table = 'fgo_gachapon_item';
+	public $table = 'fgo_rarity_weights';
 	// pky 不指定預設會抓 ID  
-	public $primaryKey = 'giid';
+	public $primaryKey = 'rwid';
 	// pky 不是整數時
 	//protected $keyType = 'string';
 	// 關掉 Autoincrement 
@@ -27,13 +27,10 @@ class GachaponItem extends Model
 	* @var array
 	*/
 	public $fillable = [
-	   'giid',
-	   'ggid',
-       'gtid',
-       'gtid_value',
-	   'is_pickup',
-	   'weight',
-	   'rarity',  
+	   'rwid',
+       'rwtid',
+       'rarity',
+       'weight',  
 	   'name', 
 	   'description',
 	   'seq', 
@@ -56,4 +53,3 @@ class GachaponItem extends Model
 
 
 }
-
