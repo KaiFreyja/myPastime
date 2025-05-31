@@ -19,7 +19,7 @@ public class TalkViewController : ViewController
     protected override void init()
     {
         base.init();
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
         btnSendTalk.onClick.AddListener(new UnityEngine.Events.UnityAction(sendTalk));
         btnClose.onClick.AddListener(new UnityEngine.Events.UnityAction(close));
     }

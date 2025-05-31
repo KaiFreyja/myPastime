@@ -16,4 +16,6 @@ public class Config
             return IP + "/api/";
         }
     }
+
+    public static bool IS_UI_ASSEST_BUNDLE = true;
 }

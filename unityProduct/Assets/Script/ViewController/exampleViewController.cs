@@ -33,7 +33,9 @@ public class exampleViewController : ViewController
     {
         Debug.Log("onClick");
 
-        var view = ViewController.GetViewController(typeof(example2ViewController));
-        view.show("‘—‹‹Ž‘—¿");
+        ViewController.GetViewController(typeof(example2ViewController),(ViewController view) =>
+        {
+            view.show("‘—‹‹Ž‘—¿");
+        });
     }
 }

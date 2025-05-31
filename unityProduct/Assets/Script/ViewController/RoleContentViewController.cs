@@ -30,7 +30,7 @@ public class RoleContentViewController : ViewController
 
     private void openTalk()
     {
-        ViewController.GetViewController(typeof(TalkViewController)).show(info);
+        ViewController.GetViewController(typeof(TalkViewController), (ViewController view) => { view.show(info); });
         //talkViewController.open(info);
     }
 
@@ -46,6 +46,11 @@ public class RoleContentViewController : ViewController
 
     private void showData(JObject jobj)
     {
+        if (jobj == null)
+        {
+            return;
+        }
+
         LabelName.text = jobj["name"].ToString();
         LabelDescription.text = jobj["description"].ToString();
 
@@ -68,6 +73,12 @@ public class RoleContentViewController : ViewController
 
     private void createImageViews(JObject jobj)
     {
+        if (jobj == null)
+        {
+            return;
+        }
+
+
         string rid = jobj["rid"].ToString();
         APIController controller = new APIController();
         JObject input = new JObject();

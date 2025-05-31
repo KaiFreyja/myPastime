@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class GlobalData
 {
-    public static int uid = 1; 
+    public static int uid = 1;
+    public AssetBundle assetBundle = null;
 }

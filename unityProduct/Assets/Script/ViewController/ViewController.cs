@@ -2,20 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ViewController : MonoBehaviour
 {
+    static GameObject canvas = null;
     static Dictionary<Type, ViewController> tempUI = new Dictionary<Type, ViewController>();
-    public static ViewController GetViewController(Type type)
+    public static void GetViewController(Type type, Action<ViewController> callback)
     {
-        return tempUI[type];
+        if (canvas == null)
+        {
+            canvas = GameObject.Find("Canvas");
+        }
+
+        if (!tempUI.ContainsKey(type))
+        {
+            if (Config.IS_UI_ASSEST_BUNDLE)
+            {
+                LoadAssestBundle.Instance.Load("ui", type.ToString(), (UnityEngine.Object obj) =>
+                {
+                    if (!tempUI.ContainsKey(type))
+                    {
+                        GameObject view = (GameObject)GameObject.Instantiate(obj);
+                        view.transform.SetParent(canvas.transform);
+                        var rectTransform = view.transform.GetComponent<RectTransform>();
+                        rectTransform.sizeDelta = new Vector2(1920, 1080);
+                        rectTransform.anchoredPosition = Vector2.zero;
+                    }
+                    callback?.Invoke(tempUI[type]);
+                });
+                return;
+            }
+            else
+            {
+                var view = (GameObject)GameObject.Instantiate(Resources.Load("ui/" + type.ToString()));
+                view.transform.SetParent(canvas.transform);
+                var rectTransform = view.transform.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(1920, 1080);
+                rectTransform.anchoredPosition = Vector2.zero;
+            }
+        }
+        callback?.Invoke(tempUI[type]);
     }
 
     bool isTryOpen = false;
     private object openData = null;
     private void Awake()
     {
-        tempUI.Add(GetType(),this);       
+        if (!tempUI.ContainsKey(GetType()))
+        {
+            tempUI.Add(GetType(), this);
+        }
     }
 
     // Start is called before the first frame update
