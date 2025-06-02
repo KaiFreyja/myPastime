@@ -33,6 +33,6 @@ public class exampleViewController : ViewController
     {
         Debug.Log("onClick");
 
-        ViewController.GetViewController(typeof(example2ViewController)).show("‘—‹‹Ž‘—¿");
+        ViewController.GetViewController<example2ViewController>().show("‘—‹‹Ž‘—¿");
     }
 }

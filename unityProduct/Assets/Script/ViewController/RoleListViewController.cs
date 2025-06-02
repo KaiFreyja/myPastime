@@ -46,7 +46,7 @@ public class RoleListViewController : ViewController
                 co.SetName(a["name"].ToString());
                 co.onClick += () =>
                 {
-                    ViewController.GetViewController(typeof(RoleContentViewController)).show(a as JObject);
+                    ViewController.GetViewController<RoleContentViewController>().show(a as JObject);
                 };
                 g.SetActive(true);
                 var download = g.AddComponent<ImageDownloader>();
