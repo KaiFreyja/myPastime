@@ -30,7 +30,7 @@ public class RoleContentViewController : ViewController
 
     private void openTalk()
     {
-        ViewController.GetViewController(typeof(TalkViewController), (ViewController view) => { view.show(info); });
+        ViewController.GetViewController(typeof(TalkViewController)).show(info);
         //talkViewController.open(info);
     }
 

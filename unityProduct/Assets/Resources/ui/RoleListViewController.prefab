@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 7987635916182594965}
   - component: {fileID: 541858037451401342}
   - component: {fileID: 19757651013908330}
+  - component: {fileID: 5052014423149088616}
   m_Layer: 5
   m_Name: RoleListViewController
   m_TagString: Untagged
@@ -226,6 +227,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5052014423149088616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603088034032945261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437aa2e78b510d349afcba6634c3805c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 8155427138958225091}
+  scrollContent: {fileID: 735911738466497907}
 --- !u!1 &3507275039723228643
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,7 +753,6 @@ GameObject:
   - component: {fileID: 4994295258724809470}
   - component: {fileID: 301540147829106883}
   - component: {fileID: 9041798680448177039}
-  - component: {fileID: 437018534689188881}
   m_Layer: 5
   m_Name: RoleListViewController
   m_TagString: Untagged
@@ -804,20 +818,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &437018534689188881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4639749098710843638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 437aa2e78b510d349afcba6634c3805c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 8155427138958225091}
-  scrollContent: {fileID: 735911738466497907}
 --- !u!1 &6326917015270611477
 GameObject:
   m_ObjectHideFlags: 0

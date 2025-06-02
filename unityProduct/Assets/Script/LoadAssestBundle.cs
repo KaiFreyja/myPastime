@@ -1,12 +1,29 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Gradle;
+using System.Linq;
 
 public class LoadAssestBundle : MonoBehaviour
 {
-    Dictionary<string, AssetBundle> temp = new Dictionary<string, AssetBundle>();
+    private string parent
+    {
+        get
+        {
+            String parent = string.Empty;
+
+#if UNITY_ANDROID
+            parent = Application.streamingAssetsPath + "/" + "android/";
+#elif UNITY_IOS
+        parent = Application.streamingAssetsPath + "/" + "ios/";
+#else
+        parent = Application.streamingAssetsPath + "/" + "win/";
+#endif
+            return parent;
+        }
+    }
+
+    Dictionary<string, AssetBundle> bundleTemp = new Dictionary<string, AssetBundle>();
 
     List<Item> items = new List<Item>();
     bool isLoading = false;
@@ -79,17 +96,8 @@ public class LoadAssestBundle : MonoBehaviour
 
             Item item = items[0];
             string bundlePath = item.path;
-            if (!temp.ContainsKey(bundlePath))
+            if (!bundleTemp.ContainsKey(bundlePath))
             {
-                string parent = string.Empty;
-#if UNITY_ANDROID
-                parent = Application.streamingAssetsPath + "/" + "android/";
-#elif UNITY_IOS
-        parent = Application.streamingAssetsPath + "/" + "ios/";
-#else
-        parent = Application.streamingAssetsPath + "/" + "win/";
-#endif
-
                 AssetBundleCreateRequest bundleRequest = AssetBundle.LoadFromFileAsync(parent + bundlePath);
                 yield return bundleRequest;
                 AssetBundle assetBundle = bundleRequest.assetBundle;
@@ -99,12 +107,12 @@ public class LoadAssestBundle : MonoBehaviour
                     Debug.LogError("Failed to load AssetBundle!");
                     yield break;
                 }
-                temp.Add(item.path, assetBundle);
+                bundleTemp.Add(item.path, assetBundle);
             }
 
-            AssetBundle bundle = temp[bundlePath];
+            AssetBundle bundle = bundleTemp[bundlePath];
 
-            // �ړ������i��@ prefab�j
+            // 載入資源（例如 prefab）
             AssetBundleRequest request = bundle.LoadAssetAsync(item.name);
             yield return request;
 
@@ -120,5 +128,27 @@ public class LoadAssestBundle : MonoBehaviour
 
         }
         isLoading = false;
+    }
+
+    public UnityEngine.Object loadAssetBundleSync(string path ,string name)
+    {
+        AssetBundle bundle = null;
+        if (!bundleTemp.ContainsKey(path))
+        {
+            bundle = AssetBundle.LoadFromFile(parent + path);
+            if (bundle == null)
+            {
+                Debug.LogError("Failed to load AssetBundle from path: " + path);
+                return null;
+            }
+            bundleTemp.Add(path, bundle);
+        }
+        else
+        {
+            bundle = bundleTemp[path];
+        }
+        var asset = bundle.LoadAsset(name);
+        //bundle.Unload(false); // 注意：如果要持續使用資源，這裡不要卸載或要保持bundle引用
+        return asset;
     }
 }

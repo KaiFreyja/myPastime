@@ -930,7 +930,6 @@ GameObject:
   - component: {fileID: 8411943862639983867}
   - component: {fileID: 4376953575564032085}
   - component: {fileID: 1028836161231379851}
-  - component: {fileID: 4637700531066728660}
   m_Layer: 5
   m_Name: TalkViewController
   m_TagString: Untagged
@@ -996,25 +995,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4637700531066728660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4992126638617080304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdd19f1f2583f36459e8ab58bb068778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  btnSendTalk: {fileID: 4367742877842489359}
-  btnClose: {fileID: 5976568317726430294}
-  roleImage: {fileID: 798158851405241233}
-  labName: {fileID: 7929638581356316898}
-  labDescription: {fileID: 3347940905575269497}
-  labAns: {fileID: 98692349012684767}
-  editText: {fileID: 828241979401923497}
 --- !u!1 &5027481779471658757
 GameObject:
   m_ObjectHideFlags: 0
@@ -1698,6 +1678,7 @@ GameObject:
   - component: {fileID: 73709187097437672}
   - component: {fileID: 4931326689381382325}
   - component: {fileID: 585537639295735016}
+  - component: {fileID: 5375704652777118049}
   m_Layer: 5
   m_Name: TalkViewController
   m_TagString: Untagged
@@ -1763,6 +1744,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5375704652777118049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8073176685479735622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd19f1f2583f36459e8ab58bb068778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  btnSendTalk: {fileID: 4367742877842489359}
+  btnClose: {fileID: 5976568317726430294}
+  roleImage: {fileID: 798158851405241233}
+  labName: {fileID: 7929638581356316898}
+  labDescription: {fileID: 3347940905575269497}
+  labAns: {fileID: 98692349012684767}
+  editText: {fileID: 828241979401923497}
 --- !u!1 &8265752297887591377
 GameObject:
   m_ObjectHideFlags: 0

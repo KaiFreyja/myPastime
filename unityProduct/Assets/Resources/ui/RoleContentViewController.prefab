@@ -681,6 +681,7 @@ GameObject:
   - component: {fileID: 3682459918503538906}
   - component: {fileID: 3015675466900432004}
   - component: {fileID: 7225957375652986624}
+  - component: {fileID: 6132069791756201111}
   m_Layer: 5
   m_Name: RoleContentViewController
   m_TagString: Untagged
@@ -746,6 +747,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6132069791756201111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4017799213748660801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0573f0195f15c941b352217b15d109a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 1064918308266970690}
+  ImageContent: {fileID: 6957782225129182649}
+  LabelName: {fileID: 4579539166699323775}
+  LabelDescription: {fileID: 363949927002437893}
+  iconProfession: {fileID: 8334483257301832547}
+  btnTalk: {fileID: 1645143882601864847}
 --- !u!1 &4323086640705803304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,7 +1369,6 @@ GameObject:
   - component: {fileID: 5709881883051426089}
   - component: {fileID: 1889005972877385775}
   - component: {fileID: 4811965777912887259}
-  - component: {fileID: 843979990045318999}
   - component: {fileID: 5256762139155826360}
   m_Layer: 5
   m_Name: RoleContentViewController
@@ -1420,24 +1438,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &843979990045318999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8543833105472709444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0573f0195f15c941b352217b15d109a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 1064918308266970690}
-  ImageContent: {fileID: 6957782225129182649}
-  LabelName: {fileID: 4579539166699323775}
-  LabelDescription: {fileID: 363949927002437893}
-  iconProfession: {fileID: 8334483257301832547}
-  btnTalk: {fileID: 1645143882601864847}
 --- !u!114 &5256762139155826360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1572,7 +1572,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6212039395006489667}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.63235295
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
