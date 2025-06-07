@@ -53,7 +53,7 @@ android {
             dimension = "environment";
             resValue("string", "is_log", "Y");
             resValue("string", "app_name", "功能學習(外網)");
-            resValue("string", "domain", "\"http://35.185.132.13/api/\"");
+            resValue("string", "domain", "\"http://35.185.174.5/api/\"");
             signingConfig = signingConfigs.getByName("debug");
         }
     }
