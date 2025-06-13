@@ -5,6 +5,8 @@ using UnityEditor;
 using System.Reflection;
 using System;
 using static BattleMain;
+using Newtonsoft.Json.Linq;
+using UnityEngine.Timeline;
 
 public class BattleMain : MonoBehaviour
 {
@@ -35,9 +37,25 @@ public class BattleMain : MonoBehaviour
         /// </summary>
         PLAYER_ACTION,
         /// <summary>
+        /// 玩家行為動畫
+        /// </summary>
+        PLAYER_ACTION_ANIMATION,
+        /// <summary>
+        /// 玩家行為動畫結束
+        /// </summary>
+        PLAYER_ACTION_ANIMATION_FIN,
+        /// <summary>
         /// 敵方行動
         /// </summary>
         ENEMY_ACTION,
+        /// <summary>
+        /// 敵方行為動畫
+        /// </summary>
+        ENEMY_ACTION_ANIMATION,
+        /// <summary>
+        /// 敵方行為動畫結束
+        /// </summary>
+        ENEMY_ACTION_ANIMATION_FIN,
         /// <summary>
         /// 回合結束
         /// </summary>
@@ -86,19 +104,19 @@ public class BattleMain : MonoBehaviour
                 battleManager = new BattleManager();
                 battleManager.InitBattle();
                 onChangedBatateState();
-                changeBattleState(BattleState.INTO_MISSION);
+                onChangeBattleState(BattleState.INTO_MISSION);
                 break;
 
             case BattleState.INTO_MISSION:
                 battleManager.IntoMission();
                 onChangedBatateState();
-                changeBattleState(BattleState.INTO_ROUND);                    
+                onChangeBattleState(BattleState.INTO_ROUND);                    
                 break;
 
             case BattleState.INTO_ROUND:
                 battleManager.IntoRound();
                 onChangedBatateState();
-                changeBattleState(BattleState.PLAYER_ACTION_WAIT);
+                onChangeBattleState(BattleState.PLAYER_ACTION_WAIT);
                 break;
 
             case BattleState.PLAYER_ACTION_WAIT:
@@ -110,25 +128,40 @@ public class BattleMain : MonoBehaviour
                 //玩家行為行動
                 battleManager.playerAction();
                 onChangedBatateState();
-
+                onChangeBattleState(BattleState.PLAYER_ACTION_ANIMATION);
+                break;
+            case BattleState.PLAYER_ACTION_ANIMATION:
+                //玩家動畫播放中
+                onChangedBatateState();
+                break;
+            case BattleState.PLAYER_ACTION_ANIMATION_FIN:
+                onChangedBatateState();
                 if (battleManager.checkIsNextMission())
                 {
-                    changeBattleState(BattleState.ROUND_FIN);
+                    onChangeBattleState(BattleState.ROUND_FIN);
                 }
                 else
                 {
-                    changeBattleState(BattleState.ENEMY_ACTION);
+                    onChangeBattleState(BattleState.ENEMY_ACTION);
                 }
                 break;
 
             case BattleState.ENEMY_ACTION:
+                //敵方行動
                 battleManager.enemyAction();
                 onChangedBatateState();
-
-                //敵方行動
-                changeBattleState(BattleState.ROUND_FIN);
+                onChangeBattleState(BattleState.ENEMY_ACTION_ANIMATION);
                 break;
 
+            case BattleState.ENEMY_ACTION_ANIMATION:
+                //敵方動畫撥放中
+                onChangedBatateState();
+                break;
+
+            case BattleState.ENEMY_ACTION_ANIMATION_FIN:
+                onChangedBatateState();
+                onChangeBattleState(BattleState.ROUND_FIN);
+                break;
 
             case BattleState.ROUND_FIN:
                 battleManager.RoundFin();
@@ -136,29 +169,29 @@ public class BattleMain : MonoBehaviour
 
                 if (battleManager.checkIsNextMission())
                 {
-                    if (battleManager.checkBattleFiin())
+                    if (battleManager.checkBattleFin())
                     {
-                        changeBattleState(BattleState.BATTLE_FIN);
+                        onChangeBattleState(BattleState.BATTLE_FIN);
                     }
                     else
                     {
-                        changeBattleState(BattleState.INTO_MISSION);
+                        onChangeBattleState(BattleState.INTO_MISSION);
                     }
                 }
-                else if (battleManager.checkBattleFiin())
+                else if (battleManager.checkBattleFin())
                 {
-                    changeBattleState(BattleState.BATTLE_FIN);
+                    onChangeBattleState(BattleState.BATTLE_FIN);
                 }
                 else
                 {
-                    changeBattleState(BattleState.INTO_ROUND);
+                    onChangeBattleState(BattleState.INTO_ROUND);
                 }
 
                 break;
 
             case BattleState.BATTLE_FIN:
                 onChangedBatateState();
-                changeBattleState(BattleState.RESULT);
+                onChangeBattleState(BattleState.RESULT);
                 break;
 
             case BattleState.RESULT:
@@ -180,7 +213,7 @@ public class BattleMain : MonoBehaviour
     }
 
 
-    private void changeBattleState(BattleState battleState)
+    private void onChangeBattleState(BattleState battleState)
     {
         Debug.Log("changeBattleState : " + battleState);
         var temp = this.battleState;
@@ -188,9 +221,28 @@ public class BattleMain : MonoBehaviour
         OnChangeBattleState?.Invoke(temp, this.battleState);
     }
 
+    /// <summary>
+    /// 遊戲開始
+    /// </summary>
     public void GameStart()
     {
-        changeBattleState(BattleState.INIT_BATTLE);
+        onChangeBattleState(BattleState.INIT_BATTLE);
+    }
+
+    /// <summary>
+    /// 玩家動畫撥放結束
+    /// </summary>
+    public void PlayerAnimationFin()
+    {
+        onChangeBattleState(BattleState.PLAYER_ACTION_ANIMATION_FIN);
+    }
+
+    /// <summary>
+    /// 敵方動畫撥放結束
+    /// </summary>
+    public void EnemyAnimationFin()
+    {
+        onChangeBattleState(BattleState.ENEMY_ACTION_ANIMATION_FIN);
     }
 
     /// <summary>
@@ -202,7 +254,7 @@ public class BattleMain : MonoBehaviour
     {
         battleManager.playerCards(cards);
         battleManager.settingTaregt(taregtEnemy);
-        changeBattleState(BattleState.PLAYER_ACTION);
+        onChangeBattleState(BattleState.PLAYER_ACTION);
     }
 
     public Master GetCardToMaster(Card card)
@@ -238,6 +290,16 @@ public class BattleMain : MonoBehaviour
     public int GetMaxMissionsNum()
     {
         return battleManager.GetMaxMissionNum();
+    }
+
+    public BattleAction[] GetPlayerBattleAction()
+    {
+        return battleManager.GetPlayerBattleAction();
+    }
+
+    public BattleAction[] GetEnemyBattleAction()
+    {
+        return battleManager.GetPlayerBattleAction();
     }
 
     public bool GetIsWin()
@@ -469,11 +531,14 @@ class BattleManager
         currentTargetMaster = master;
     }
 
+    List<BattleAction> playerBattleActions = new List<BattleAction>();
+    List<BattleAction> enemyBattleActions = new List<BattleAction>();
     /// <summary>
     /// 我方行動
     /// </summary>
     public void playerAction()
     {
+        playerBattleActions = new List<BattleAction>();
         for (int i = 0;i < currentPlayerCards.Length;i++)
         {
             var card = currentPlayerCards[i];
@@ -491,12 +556,24 @@ class BattleManager
                     colorAtkRate = 0.8f;
                     break;
             }
-            currentTargetMaster.hp -= (int)(master.atk * colorAtkRate);
+
+            int damage = (int)(master.atk * colorAtkRate);
+            currentTargetMaster.hp -= damage;
+
+            playerBattleActions.Add(new BattleAction
+            {
+                attacker = master,
+                target = currentTargetMaster,
+                color = card.color,
+                damage = damage,
+                isTargetDead = !currentTargetMaster.isAlive
+            });
+
+
 
             if (!currentTargetMaster.isAlive)
             {
                 var flag = Array.IndexOf(currentEnemyTeam, currentTargetMaster);
-                //currentEnemyTeam.Remove(currentTargetMaster);
                 if (flag >= 0)
                 {
                     currentEnemyTeam[flag] = null;
@@ -516,7 +593,6 @@ class BattleManager
                     }
                 }
             }
-
         }
     }
 
@@ -542,6 +618,8 @@ class BattleManager
     /// </summary>
     public void enemyAction()
     {
+        enemyBattleActions = new List<BattleAction>();
+
         List<Master> aliveEnemyTeam = new List<Master>();
         for (int j = 0; j < currentEnemyTeam.Length; j++)
         {
@@ -575,7 +653,18 @@ class BattleManager
             int taget = UnityEngine.Random.Range(0, alivePlayerTeaam.Count - 1);
             Master playerMaster = alivePlayerTeaam[taget];
 
-            playerMaster.hp -= enemyMaster.atk;
+            int damage = enemyMaster.atk;
+            playerMaster.hp -= damage;
+
+            enemyBattleActions.Add(new BattleAction 
+            {
+                attacker = enemyMaster,
+                target = playerMaster,
+                color = Card.CardColor.RED,
+                damage = damage,
+                isTargetDead = playerMaster.isAlive
+            });
+
             if (!playerMaster.isAlive)
             {
                 int index = Array.IndexOf(currentPlayerTeam,playerMaster);
@@ -685,7 +774,7 @@ class BattleManager
     /// 是否戰鬥結束
     /// </summary>
     /// <returns></returns>
-    public bool checkBattleFiin()
+    public bool checkBattleFin()
     {
         bool isEnenyDied = true;
         bool isPlayerDied = true;
@@ -773,6 +862,24 @@ class BattleManager
     {
         return nowRoundNum;
     }
+
+    /// <summary>
+    /// 取得玩家戰鬥動畫
+    /// </summary>
+    /// <returns></returns>
+    public BattleAction[] GetPlayerBattleAction()
+    {
+        return playerBattleActions.ToArray();
+    }
+
+    /// <summary>
+    /// 取得敵方戰鬥動畫
+    /// </summary>
+    /// <returns></returns>
+    public BattleAction[] GetEnemyBattleAction()
+    {
+        return enemyBattleActions.ToArray();
+    }
 }
 
 /// <summary>
@@ -783,6 +890,9 @@ public class Mission
     public List<Master> enemys = new List<Master>();
 }
 
+/// <summary>
+/// 單位
+/// </summary>
 public class Master
 {
     public string id = "";
@@ -802,8 +912,23 @@ public class Master
         }
     }
 
+    public JObject ToJson()
+    {
+        JObject json = new JObject();
+        json.Add("id", id);
+        json.Add("name",name);
+        json.Add("max_hp",maxHp);
+        json.Add("hp", hp);
+        json.Add("atk",atk);
+        json.Add("np", np);
+        return json;
+    }
+
 }
 
+/// <summary>
+/// 卡色
+/// </summary>
 public class Card
 {
     public enum CardColor
@@ -812,8 +937,55 @@ public class Card
         BULE,
         GREEN,
     }
+
+    /// <summary>
+    /// 卡片id
+    /// </summary>
     public string id = "";
+    /// <summary>
+    /// 單位id
+    /// </summary>
+    public string mid = "";
+    /// <summary>
+    /// 卡色
+    /// </summary>
     public CardColor color;
+
+    public JObject ToJson()
+    {
+        JObject json = new JObject();
+        json.Add("id",id);
+        json.Add("mid",mid);
+        json.Add("color", color.ToString());
+        return json;
+    }
+}
+
+/// <summary>
+/// 戰鬥動畫
+/// </summary>
+public class BattleAction
+{
+    /// <summary>
+    /// 攻擊者
+    /// </summary>
+    public Master attacker;
+    /// <summary>
+    /// 對象
+    /// </summary>
+    public Master target;
+    /// <summary>
+    /// 傷害
+    /// </summary>
+    public int damage;
+    /// <summary>
+    /// 卡色
+    /// </summary>
+    public Card.CardColor color;
+    /// <summary>
+    /// 對象是否死亡
+    /// </summary>
+    public bool isTargetDead;
 }
 
 public class BattleUnitTestCase
@@ -822,24 +994,23 @@ public class BattleUnitTestCase
     {
         List<Master> playerTeam = new List<Master>();
         Master master = new Master() { id = "1", name = "單位1" };
-        master.cards = new List<Card>() { new Card { id = "1", color = Card.CardColor.RED }, new Card { id = "2", color = Card.CardColor.RED }, new Card { id = "3", color = Card.CardColor.BULE }, new Card { id = "4", color = Card.CardColor.BULE }, new Card { id = "5", color = Card.CardColor.GREEN } };
+        master.cards = new List<Card>() { new Card { id = "1",mid = master.id, color = Card.CardColor.RED }, new Card { id = "2", mid = master.id, color = Card.CardColor.RED }, new Card { id = "3", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "4", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "5", mid = master.id, color = Card.CardColor.GREEN } };
         playerTeam.Add(master);
         master = new Master() { id = "2", name = "單位2" };
-        master.cards = new List<Card>() { new Card { id = "11", color = Card.CardColor.RED }, new Card { id = "12", color = Card.CardColor.RED }, new Card { id = "13", color = Card.CardColor.BULE }, new Card { id = "14", color = Card.CardColor.BULE }, new Card { id = "15", color = Card.CardColor.GREEN } };
+        master.cards = new List<Card>() { new Card { id = "11", mid = master.id, color = Card.CardColor.RED }, new Card { id = "12", mid = master.id, color = Card.CardColor.RED }, new Card { id = "13", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "14", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "15", mid = master.id, color = Card.CardColor.GREEN } };
         playerTeam.Add(master);
         master = new Master() { id = "3", name = "單位3" };
-        master.cards = new List<Card>() { new Card { id = "21", color = Card.CardColor.RED }, new Card { id = "22", color = Card.CardColor.RED }, new Card { id = "23", color = Card.CardColor.BULE }, new Card { id = "24", color = Card.CardColor.BULE }, new Card { id = "25", color = Card.CardColor.GREEN } };
+        master.cards = new List<Card>() { new Card { id = "21", mid = master.id, color = Card.CardColor.RED }, new Card { id = "22", mid = master.id, color = Card.CardColor.RED }, new Card { id = "23", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "24", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "25", mid = master.id, color = Card.CardColor.GREEN } };
         playerTeam.Add(master);
 
         master = new Master() { id = "4", name = "單位4" };
-        master.cards = new List<Card>() { new Card { id = "31", color = Card.CardColor.RED }, new Card { id = "32", color = Card.CardColor.RED }, new Card { id = "33", color = Card.CardColor.BULE }, new Card { id = "34", color = Card.CardColor.BULE }, new Card { id = "35", color = Card.CardColor.GREEN } };
+        master.cards = new List<Card>() { new Card { id = "31", mid = master.id, color = Card.CardColor.RED }, new Card { id = "32", mid = master.id, color = Card.CardColor.RED }, new Card { id = "33", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "34", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "35", mid = master.id, color = Card.CardColor.GREEN } };
         playerTeam.Add(master);
-
         master = new Master() { id = "5", name = "單位5" };
-        master.cards = new List<Card>() { new Card { id = "41", color = Card.CardColor.RED }, new Card { id = "42", color = Card.CardColor.RED }, new Card { id = "43", color = Card.CardColor.BULE }, new Card { id = "44", color = Card.CardColor.BULE }, new Card { id = "45", color = Card.CardColor.GREEN } };
+        master.cards = new List<Card>() { new Card { id = "41", mid = master.id, color = Card.CardColor.RED }, new Card { id = "42", mid = master.id, color = Card.CardColor.RED }, new Card { id = "43", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "44", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "45", mid = master.id, color = Card.CardColor.GREEN } };
         playerTeam.Add(master);
         master = new Master() { id = "6", name = "單位6" };
-        master.cards = new List<Card>() { new Card { id = "51", color = Card.CardColor.RED }, new Card { id = "52", color = Card.CardColor.RED }, new Card { id = "53", color = Card.CardColor.BULE }, new Card { id = "54", color = Card.CardColor.BULE }, new Card { id = "55", color = Card.CardColor.GREEN } };
+        master.cards = new List<Card>() { new Card { id = "51", mid = master.id, color = Card.CardColor.RED }, new Card { id = "52", mid = master.id, color = Card.CardColor.RED }, new Card { id = "53", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "54", mid = master.id, color = Card.CardColor.BULE }, new Card { id = "55", mid = master.id, color = Card.CardColor.GREEN } };
         playerTeam.Add(master);
 
         return playerTeam.ToArray();

@@ -47,14 +47,48 @@ public class BattleMainUnitCase : MonoBehaviour
                     isSelectCard = false;
                     selectCards = new List<Card>();
                     break;
+
+                case BattleMain.BattleState.PLAYER_ACTION_ANIMATION:
+                    Debug.Log("播放玩家動畫");
+                    isTiming = true;
+                    actions = main.GetPlayerBattleAction();
+                    break;
+
+                case BattleMain.BattleState.ENEMY_ACTION_ANIMATION:
+                    Debug.Log("撥放敵方動畫");
+                    isTiming = true;
+                    actions = main.GetEnemyBattleAction();
+                    break;
             }
         };
     }
 
+    BattleAction[] actions = null;
+
+    bool isTiming = false;
+    float dtTime = 0;
     // Update is called once per frame
     void Update()
     {
-        
+        if (isTiming)
+        {
+            dtTime += Time.deltaTime;
+            if (dtTime > 2)
+            {
+                isTiming = false;
+                dtTime = 0;
+                switch (main.state)
+                {
+                    case BattleMain.BattleState.PLAYER_ACTION_ANIMATION:
+                        main.PlayerAnimationFin();
+                        break;
+
+                    case BattleMain.BattleState.ENEMY_ACTION_ANIMATION:
+                        main.EnemyAnimationFin();
+                        break;
+                }
+            }
+        }
     }
 
     private void OnGUI()
@@ -75,6 +109,18 @@ public class BattleMainUnitCase : MonoBehaviour
                 {
                     uiPlayerActionWait();
                 }
+                break;
+
+            case BattleMain.BattleState.PLAYER_ACTION_ANIMATION:
+                uiShowMissionData();
+                uiShowMaster();
+                uiPlayerAnimation();
+                break;
+
+            case BattleMain.BattleState.ENEMY_ACTION_ANIMATION:
+                uiShowMissionData();
+                uiShowMaster();
+                uiEnemyAnimation();
                 break;
 
             case BattleMain.BattleState.RESULT:
@@ -158,7 +204,7 @@ public class BattleMainUnitCase : MonoBehaviour
             }
             else
             {
-                GUI.Box(new Rect(w * (i + 1) + 20 * i, Screen.height - h, w, h), player.name + "\n" + player.hp + "/" + player.maxHp);
+                GUI.Box(new Rect(w * (i + 1) + 20 * i, Screen.height - h, w, h), player.name + "\n" + "hp " + player.hp + "/" + player.maxHp + "\n" + "np " + player.np + "/100");
             }
         }
 
@@ -186,6 +232,15 @@ public class BattleMainUnitCase : MonoBehaviour
 
         GUI.Box(new Rect(Screen.width - w, 0, w, h), "[" + nowMissionsNum + "/" + maxMissionsNum + "]" + "\n" + "Round : " + nowRound);
         
+    }
+
+    private void uiPlayerAnimation()
+    {
+        GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "玩家動畫播放中");
+    }
+    private void uiEnemyAnimation()
+    {
+        GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "敵方動畫播放中");
     }
 
     private void uiResult()
