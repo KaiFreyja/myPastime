@@ -299,7 +299,7 @@ public class BattleMain : MonoBehaviour
 
     public BattleAction[] GetEnemyBattleAction()
     {
-        return battleManager.GetPlayerBattleAction();
+        return battleManager.GetEnemyBattleAction();
     }
 
     public bool GetIsWin()
