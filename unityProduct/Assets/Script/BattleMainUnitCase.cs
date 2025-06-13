@@ -20,6 +20,17 @@ public class BattleMainUnitCase : MonoBehaviour
                 case BattleMain.BattleState.INTO_ROUND:
                     players = main.GetCurrentPlayerMaster();
                     enemys = main.GetCurrentEnemyMaster();
+                    if (enemys[selectEnemy] == null)
+                    {
+                        for (int i = 0; i < enemys.Length; i++)
+                        {
+                            if (enemys[i] != null)
+                            {
+                                selectEnemy = i;
+                                break;
+                            }
+                        }
+                    }
                     break;
 
                 case BattleMain.BattleState.PLAYER_ACTION_WAIT:
@@ -132,16 +143,31 @@ public class BattleMainUnitCase : MonoBehaviour
         for (int i = 0; i < players.Length; i++)
         {
             var player = players[i];
-            GUI.Box(new Rect(w * (i + 1) + 20 * i, Screen.height - h, w, h), player.name + "\n" + player.hp + "/" + player.maxHp);
+
+            if (player == null)
+            {
+                //該站位無但位
+            }
+            else
+            {
+                GUI.Box(new Rect(w * (i + 1) + 20 * i, Screen.height - h, w, h), player.name + "\n" + player.hp + "/" + player.maxHp);
+            }
         }
 
         for (int i = 0; i < enemys.Length; i++)
         {
             var enemy = enemys[i];
-            string name = (selectEnemy == i) ? "[" + enemy.name + "]" : enemy.name;
-            if (GUI.Button(new Rect(w * (i + 1) + 20 * i, 0, w, h), name + "\n" + enemy.hp + "/" + enemy.maxHp))
+            if (enemy == null)
             {
-                selectEnemy = i;
+                //該站位無單位
+            }
+            else
+            {
+                string name = (selectEnemy == i) ? "[" + enemy.name + "]" : enemy.name;
+                if (GUI.Button(new Rect(w * (i + 1) + 20 * i, 0, w, h), name + "\n" + enemy.hp + "/" + enemy.maxHp))
+                {
+                    selectEnemy = i;
+                }
             }
         }
     }

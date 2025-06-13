@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEditor;
 using System.Reflection;
+using System;
 
 public class BattleMain : MonoBehaviour
 {
@@ -282,8 +283,8 @@ class BattleManager
     }
 
     public Mission currentMission = null;
-    public List<Master> currentPlayerTeam = new List<Master>();
-    public List<Master> currentEnemyTeam = new List<Master>();
+    public Master[] currentPlayerTeam = new Master[3];
+    public Master[] currentEnemyTeam = new Master[3];
     /// <summary>
     /// 進入關卡
     /// </summary>
@@ -301,12 +302,16 @@ class BattleManager
     private void initCurrentPlayer()
     {
         ///初始話當前出場單位
-        if (currentPlayerTeam.Count == 0)
+        if (nowMissionNum == 1)
         {
-            currentPlayerTeam = new List<Master>();
-            currentPlayerTeam.Add(playerTeam[0]);
-            currentPlayerTeam.Add(playerTeam[1]);
-            currentPlayerTeam.Add(playerTeam[2]);
+            currentPlayerTeam = new Master[3];
+            for (int i = 0; i < currentPlayerTeam.Length; i++)
+            {
+                if (playerTeam.Count > i)
+                {
+                    currentPlayerTeam[i] = playerTeam[i];
+                }
+            }
         }
     }
 
@@ -320,10 +325,14 @@ class BattleManager
 
         missionEnemyTeam = new List<Master>(currentMission.enemys);
 
-        currentEnemyTeam = new List<Master>();
-        currentEnemyTeam.Add(missionEnemyTeam[0]);
-        currentEnemyTeam.Add(missionEnemyTeam[1]);
-        currentEnemyTeam.Add(missionEnemyTeam[2]);
+        currentEnemyTeam = new Master[3];
+        for (int i = 0; i < currentEnemyTeam.Length; i++)
+        {
+            if (missionEnemyTeam.Count > i)
+            {
+                currentEnemyTeam[i] = missionEnemyTeam[i];
+            }
+        }
     }
 
     /// <summary>
@@ -369,9 +378,13 @@ class BattleManager
         playersCards = new Queue<Card>();
         //初始牌型
         var cards = new List<Card>();
-        for (int i = 0; i < currentPlayerTeam.Count; i++)
+        for (int i = 0; i < currentPlayerTeam.Length; i++)
         {
             Master master = currentPlayerTeam[i];
+            if (master == null)
+            {
+                continue;
+            }
             for (int j = 0; j < master.cards.Count; j++)
             {
                 cards.Add(master.cards[j]);
@@ -380,7 +393,7 @@ class BattleManager
         //洗牌
         for (int i = 0; i < cards.Count; i++)
         {
-            int random = Random.Range(0, cards.Count - 1);
+            int random = UnityEngine.Random.Range(0, cards.Count - 1);
             var temp = cards[i];
             cards[i] = cards[random];
             cards[random] = temp;
@@ -463,15 +476,25 @@ class BattleManager
 
             if (!currentTargetMaster.isAlive)
             {
-                currentEnemyTeam.Remove(currentTargetMaster);
-                if (currentEnemyTeam.Count > 0)
+                var flag = Array.IndexOf(currentEnemyTeam, currentTargetMaster);
+                //currentEnemyTeam.Remove(currentTargetMaster);
+                if (flag >= 0)
                 {
-                    currentTargetMaster = currentEnemyTeam[0];
-                }
-                else
-                {
-                    //敵方目前全滅
-                    return;
+                    currentEnemyTeam[flag] = null;
+                    
+                    //選擇下一個目標
+                    for (int j = 0; j < currentEnemyTeam.Length; j++)
+                    {
+                        if (currentEnemyTeam[j] != null)
+                        {
+                            currentTargetMaster = currentEnemyTeam[j];
+                            break;
+                        }
+                        if (j == currentEnemyTeam.Length - 1)
+                        {
+                            Debug.Log("敵方目前單位全滅");
+                        }
+                    }
                 }
             }
 
@@ -500,74 +523,107 @@ class BattleManager
     /// </summary>
     public void enemyAction()
     {
-        //bool isUpdatePlayerCard = false;
-        for (int i = 0; i < currentEnemyTeam.Count; i++)
+        List<Master> aliveEnemyTeam = new List<Master>();
+        for (int j = 0; j < currentEnemyTeam.Length; j++)
         {
-            if (currentPlayerTeam.Count == 0)
+            if (currentPlayerTeam[j] != null && currentPlayerTeam[j].isAlive)
+            {
+                aliveEnemyTeam.Add(currentPlayerTeam[j]);
+            }
+        }
+
+        //bool isUpdatePlayerCard = false;
+        for (int i = 0; i < aliveEnemyTeam.Count; i++)
+        {
+            List<Master> alivePlayerTeaam = new List<Master>();
+            for (int j = 0; j < currentPlayerTeam.Length; j++)
+            {
+                if (currentPlayerTeam[j] != null && currentPlayerTeam[j].isAlive)
+                {
+                    alivePlayerTeaam.Add(currentPlayerTeam[j]);
+                }
+            }
+            if (alivePlayerTeaam.Count == 0)
             {
                 Debug.LogError("我方現在單位全滅");
                 return;
             }
 
-            int flag = Random.Range(0, currentEnemyTeam.Count - 1);
-            Master enemyMaster = currentEnemyTeam[flag];
 
-            int taget = Random.Range(0, currentPlayerTeam.Count - 1);
-            Master playerMaster = currentPlayerTeam[taget];
+            int flag = UnityEngine.Random.Range(0, aliveEnemyTeam.Count - 1);
+            Master enemyMaster = aliveEnemyTeam[flag];
+
+            int taget = UnityEngine.Random.Range(0, alivePlayerTeaam.Count - 1);
+            Master playerMaster = alivePlayerTeaam[taget];
 
             playerMaster.hp -= enemyMaster.atk;
             if (!playerMaster.isAlive)
             {
-                currentPlayerTeam.Remove(playerMaster);
+                int index = Array.IndexOf(currentPlayerTeam,playerMaster);
+                currentPlayerTeam[index] = null;
+                isUpdatePlayerCard = true;
             }
         }
     }
 
+    /// <summary>
+    /// 是否要更新發牌組
+    /// </summary>
+    bool isUpdatePlayerCard = false;
     public void RoundFin()
     {
-        bool isUpdatePlayerCard = false;
-
-        int unitCount = 3;
-
         //補齊我方單位
-        for (int i = 0; i < playerTeam.Count; i++)
+        for (int i = 0; i < currentPlayerTeam.Length; i++)
         {
-            if (currentPlayerTeam.Count < unitCount)
+            if (currentPlayerTeam[i] == null)
             {
-                var a = playerTeam[i];
-                if (!currentPlayerTeam.Contains(a) && a.isAlive)
+                for (int j = 0; j < playerTeam.Count; j++)
                 {
-                    isUpdatePlayerCard = true;
-                    Debug.Log("補齊我方單位");
-                    currentPlayerTeam.Add(a);
+                    var playerMaster = playerTeam[j];
+                    if (!playerMaster.isAlive)
+                    {
+                        continue;
+                    }
+                    int index = Array.IndexOf(currentPlayerTeam, playerMaster);
+                    //目前不在隊伍裡
+                    if (index < 0)
+                    {
+                        isUpdatePlayerCard = true;
+                        //補上單位
+                        currentPlayerTeam[i] = playerMaster;
+                        break;
+                    }
                 }
-            }
-            else
-            {
-                break;
             }
         }
 
         //補齊敵方單位
-        for (int i = 0; i < missionEnemyTeam.Count; i++)
+        for (int i = 0; i < currentEnemyTeam.Length; i++)
         {
-            if (currentEnemyTeam.Count < unitCount)
+            if (currentEnemyTeam[i] == null)
             {
-                var a = missionEnemyTeam[i];
-                if (!currentEnemyTeam.Contains(a) && a.isAlive)
+                for (int j = 0; j < missionEnemyTeam.Count; j++)
                 {
-                    Debug.Log("補齊敵方單位");
-                    currentEnemyTeam.Add(a);
+                    var enemyMaster = missionEnemyTeam[j];
+                    if (!enemyMaster.isAlive)
+                    {
+                        continue;
+                    }
+
+                    //目前不在隊伍內
+                    int index = Array.IndexOf(currentEnemyTeam,enemyMaster);
+                    if (index < 0)
+                    {
+                        currentEnemyTeam[i] = enemyMaster;
+                        break;
+                    }
                 }
-            }
-            else
-            {
-                break;
             }
         }
 
         if (isUpdatePlayerCard)
         {
+            isUpdatePlayerCard = false;
             ///重新發牌
             initPlayerCard();
         }
@@ -660,7 +716,7 @@ class BattleManager
     /// <returns></returns>
     public Master[] GetPlayerTeams()
     {
-        return currentPlayerTeam.ToArray();
+        return currentPlayerTeam;
     }
 
     /// <summary>
@@ -669,9 +725,7 @@ class BattleManager
     /// <returns></returns>
     public Master[] GetEnemyTeams()
     {
-        Debug.Log("currentEnemyTeam.Count : " + currentEnemyTeam.Count);
-
-        return currentEnemyTeam.ToArray();
+        return currentEnemyTeam;
     }
 
     /// <summary>
