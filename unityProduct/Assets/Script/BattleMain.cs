@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEditor;
 using System.Reflection;
 using System;
+using static BattleMain;
 
 public class BattleMain : MonoBehaviour
 {
@@ -62,7 +63,8 @@ public class BattleMain : MonoBehaviour
             return battleState;
         }
     }
-    public System.Action<BattleState,BattleState> onChangeBattleState = null;
+    public System.Action<BattleState,BattleState> OnChangeBattleState = null;
+    public System.Action<BattleState> OnChangedBattleState = null;
     private BattleState battleState = BattleState.WAIT;
     BattleManager battleManager = new BattleManager();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -77,31 +79,37 @@ public class BattleMain : MonoBehaviour
         switch (battleState)
         {
             case BattleState.WAIT:
+                onChangedBatateState();
                 break;
 
             case BattleState.INIT_BATTLE:
                 battleManager = new BattleManager();
                 battleManager.InitBattle();
+                onChangedBatateState();
                 changeBattleState(BattleState.INTO_MISSION);
                 break;
 
             case BattleState.INTO_MISSION:
                 battleManager.IntoMission();
+                onChangedBatateState();
                 changeBattleState(BattleState.INTO_ROUND);                    
                 break;
 
             case BattleState.INTO_ROUND:
                 battleManager.IntoRound();
+                onChangedBatateState();
                 changeBattleState(BattleState.PLAYER_ACTION_WAIT);
                 break;
 
             case BattleState.PLAYER_ACTION_WAIT:
-                //玩家行動等待中                
+                //玩家行動等待中
+                onChangedBatateState();
                 break;
 
             case BattleState.PLAYER_ACTION:
                 //玩家行為行動
                 battleManager.playerAction();
+                onChangedBatateState();
 
                 if (battleManager.checkIsNextMission())
                 {
@@ -115,6 +123,8 @@ public class BattleMain : MonoBehaviour
 
             case BattleState.ENEMY_ACTION:
                 battleManager.enemyAction();
+                onChangedBatateState();
+
                 //敵方行動
                 changeBattleState(BattleState.ROUND_FIN);
                 break;
@@ -122,51 +132,60 @@ public class BattleMain : MonoBehaviour
 
             case BattleState.ROUND_FIN:
                 battleManager.RoundFin();
+                onChangedBatateState();
+
                 if (battleManager.checkIsNextMission())
                 {
-                    Debug.Log("AAAAAA");
                     if (battleManager.checkBattleFiin())
                     {
-                        Debug.Log("BBBBBB");
                         changeBattleState(BattleState.BATTLE_FIN);
                     }
                     else
                     {
-                        Debug.Log("cccc");
                         changeBattleState(BattleState.INTO_MISSION);
                     }
                 }
                 else if (battleManager.checkBattleFiin())
                 {
-
-                    Debug.Log("dddd");
                     changeBattleState(BattleState.BATTLE_FIN);
                 }
                 else
                 {
-                    Debug.Log("eeeee");
                     changeBattleState(BattleState.INTO_ROUND);
                 }
 
                 break;
 
             case BattleState.BATTLE_FIN:
+                onChangedBatateState();
                 changeBattleState(BattleState.RESULT);
                 break;
 
             case BattleState.RESULT:
+                onChangedBatateState();
                 //changeBattleState(BattleState.WAIT);
                 break;
         }
     }
+
+    private BattleState preBattleState = BattleState.WAIT;
+    private void onChangedBatateState()
+    {
+        if (preBattleState != this.battleState)
+        {
+            Debug.Log("onChangedBatateState : " + battleState);
+            preBattleState = this.battleState;
+            OnChangedBattleState?.Invoke(this.battleState);
+        }
+    }
+
 
     private void changeBattleState(BattleState battleState)
     {
         Debug.Log("changeBattleState : " + battleState);
         var temp = this.battleState;
         this.battleState = battleState;
-
-        onChangeBattleState.Invoke(temp, this.battleState);
+        OnChangeBattleState?.Invoke(temp, this.battleState);
     }
 
     public void GameStart()
@@ -830,7 +849,7 @@ public class BattleUnitTestCase
     {
         List<Mission> missions = new List<Mission>();
         missions.Add(new Mission { enemys = new List<Master>() { new Master { id = "11", name = "敵方單位11" }, new Master { id = "12", name = "敵方單位12" }, new Master { id = "13", name = "敵方單位13" }, new Master { id = "13", name = "敵方單位14" } } });
-        missions.Add(new Mission { enemys = new List<Master>() { new Master { id = "21", name = "敵方單位21" }, new Master { id = "22", name = "敵方單位12" }, new Master { id = "23", name = "敵方單位23" } } });
+        missions.Add(new Mission { enemys = new List<Master>() { new Master { id = "21", name = "敵方單位21" }, new Master { id = "22", name = "敵方單位22" }, new Master { id = "23", name = "敵方單位23" } } });
         missions.Add(new Mission { enemys = new List<Master>() { new Master { id = "31", name = "敵方單位31" }, new Master { id = "32", name = "敵方單位32" }, new Master { id = "33", name = "敵方單位33" } } });
         return missions.ToArray();
     }

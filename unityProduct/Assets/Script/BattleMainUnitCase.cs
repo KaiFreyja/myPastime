@@ -9,16 +9,24 @@ public class BattleMainUnitCase : MonoBehaviour
     Master[] players = null;
     Master[] enemys = null;
     Card[] cards = new Card[5];
+    int maxMissionsNum = 0;
+    int nowMissionsNum = 0;
+    int nowRound = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         main = GetComponent<BattleMain>();
-        main.onChangeBattleState = (BattleMain.BattleState pre, BattleMain.BattleState now) =>
+        main.OnChangedBattleState = (BattleMain.BattleState state) =>
         {
-            switch (now)
+            switch (state)
             {
                 case BattleMain.BattleState.INTO_ROUND:
+                    maxMissionsNum = main.GetMaxMissionsNum();
+                    nowMissionsNum = main.GetNowMissionsNum();
+                    nowRound = main.GetRoundNum();
+                    ///取得我方上場單位
                     players = main.GetCurrentPlayerMaster();
+                    //取得敵方上場單位
                     enemys = main.GetCurrentEnemyMaster();
                     if (enemys[selectEnemy] == null)
                     {
@@ -31,12 +39,13 @@ public class BattleMainUnitCase : MonoBehaviour
                             }
                         }
                     }
+                    //取得這回合的牌
+                    cards = main.GetNowRoundCard();
                     break;
 
                 case BattleMain.BattleState.PLAYER_ACTION_WAIT:
                     isSelectCard = false;
                     selectCards = new List<Card>();
-                    cards = main.GetNowRoundCard();
                     break;
             }
         };
@@ -55,7 +64,6 @@ public class BattleMainUnitCase : MonoBehaviour
             case BattleMain.BattleState.WAIT:
                 uiWait();
                 break;
-
             case BattleMain.BattleState.PLAYER_ACTION_WAIT:
                 uiShowMissionData();
                 uiShowMaster();
@@ -146,7 +154,7 @@ public class BattleMainUnitCase : MonoBehaviour
 
             if (player == null)
             {
-                //該站位無但位
+                //該站位無單位
             }
             else
             {
@@ -176,11 +184,7 @@ public class BattleMainUnitCase : MonoBehaviour
         int w = 100;
         int h = 100;
 
-        int max = main.GetMaxMissionsNum();
-        int now = main.GetNowMissionsNum();
-        int nowRound = main.GetRoundNum();
-
-        GUI.Box(new Rect(Screen.width - w, 0, w, h), "[" + now + "/" + max + "]" + "\n" + "Round : " + nowRound);
+        GUI.Box(new Rect(Screen.width - w, 0, w, h), "[" + nowMissionsNum + "/" + maxMissionsNum + "]" + "\n" + "Round : " + nowRound);
         
     }
 
