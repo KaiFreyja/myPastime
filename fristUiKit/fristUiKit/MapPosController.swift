@@ -7,6 +7,7 @@
 
 import UIKit;
 import GoogleMaps;
+import SwiftyJSON;
 
 class MapPosController : UIViewController
 {
@@ -19,38 +20,21 @@ class MapPosController : UIViewController
 
         var controller = APIController();
         controller.GetFgoMapPos(input: [:]){result in
-            if let json = result.getData() as? [String:Any]
+            
+            let json = JSON(result.getData());
+            let data = json["map_pos"]["data"];
+            for i in 0..<data.count
             {
-                if let map_pos = json["map_pos"] as? [String:Any]
-                {
-                    if let data = map_pos["data"] as? [[String:Any]]
-                    {
-                        for i in 0..<data.count
-                        {
-                            var oneData = data[i];
-                            var lat : Double = 0;
-                            var lng : Double = 0;
-                            if let slat = oneData["lat"] as? String
-                            {
-                                if let nlat = Double(slat)
-                                {
-                                    lat = nlat;
-                                }
-                            }
-                            if let slng = oneData["lng"] as? String
-                            {
-                                if let nlng = Double(slng)
-                                {
-                                    lng = nlng;
-                                }
-                            }
-                            let marler = GMSMarker();
-                            marler.position = CLLocationCoordinate2D(latitude: lat, longitude: lng);
-                            marler.map = mapView;
-                            
-                        }
-                    }
-                }
+                var oneData = data[i];
+                var lat : Double = 0;
+                var lng : Double = 0;
+                lat = oneData["lat"].doubleValue;
+                lng = oneData["lng"].doubleValue;
+                
+                let marler = GMSMarker();
+                marler.position = CLLocationCoordinate2D(latitude: lat, longitude: lng);
+                marler.map = mapView;
+                
             }
         }
         

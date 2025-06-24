@@ -25,48 +25,35 @@ class RoleContentViewController: UIViewController, UICollectionViewDelegate, UIC
     var displayedImages: [String] = [];
     var timer : Timer?
     
-    var roleInfo : [String:Any]?
+    var roleInfo : JSON = [];
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        
-        if let info = roleInfo as? [String:Any]
-        {
-            if let rid = info["rid"] as? Int
-            {
-                let url : String = "\(config.IMAGE_DOMAIN)\(rid).png";
-            
-                if let url = URL(string: url) {
-                    // 非同步載入圖片
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData) {
-                            DispatchQueue.main.async {
-                                self.imgRole?.image = image;
-                            }
-                        }
+                
+        let info = roleInfo;
+        let rid = info["rid"].intValue;
+        let url : String = "\(config.IMAGE_DOMAIN)\(rid).png";
+        if let url = URL(string: url) {
+            // 非同步載入圖片
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData) {
+                    DispatchQueue.main.async {
+                        self.imgRole?.image = image;
                     }
                 }
-
-                getRoleResource(rid: rid);
-                getLevelAttr(rid: rid);
-            }
-            if let name = info["name"] as? String
-            {
-                tvName?.text = name;
-            }
-            if let description = info["description"] as? String
-            {
-                tvDescription?.text = description;
-            }
-            if let pid = info["pid"] as? Int
-            {
-                tvProfession?.text = String(pid);
-            }
-            if let gid = info["gid"] as? Int
-            {
-                tvGender?.text = String(gid);
             }
         }
+        getRoleResource(rid: rid);
+        getLevelAttr(rid: rid);
+        
+        let name = info["name"].stringValue;
+        tvName?.text = name;
+        let description = info["description"].stringValue;
+        tvDescription?.text = description;
+        let pid = info["pid"].stringValue;
+        tvProfession?.text = pid;
+        let gid = info["gid"].stringValue;
+        tvGender?.text = gid;
     }
     
     func getLevelAttr(rid : Int)
@@ -78,25 +65,14 @@ class RoleContentViewController: UIViewController, UICollectionViewDelegate, UIC
             var hps : [Int] = [];
             var atks : [Int] = [];
             
-            if let json = resultData as? [String:Any]
+            let json = JSON(resultData);
+            let data = json["level_attr"]["data"];
+            for (index, item) in data
             {
-                if let level_attr = json["level_attr"] as? [String:Any]
-                {
-                    if let data = level_attr["data"] as? [[String:Any]]
-                    {
-                        for item in data
-                        {
-                            if let hp = item["hp"] as? Int
-                            {
-                                hps.append(hp);
-                            }
-                            if let atk = item["atk"] as? Int
-                            {
-                                atks.append(atk);
-                            }
-                        }
-                    }
-                }
+                let hp = item["hp"].intValue;
+                hps.append(hp);
+                let atk = item["atk"].intValue;
+                atks.append(atk);
             }
             
             // 準備你的數據
@@ -128,8 +104,8 @@ class RoleContentViewController: UIViewController, UICollectionViewDelegate, UIC
             dataSet2.lineWidth = 2;
             dataSet2.circleRadius = 0.1;
             
-            let data = LineChartData(dataSets: [dataSet1, dataSet2])
-            self.lineView.data = data
+            let mdata = LineChartData(dataSets: [dataSet1, dataSet2])
+            self.lineView.data = mdata
 
             self.lineView.delegate = self;
             // 其他圖表配置

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class ProfessionAtkRateViewController : UIViewController {
     
@@ -13,7 +14,7 @@ class ProfessionAtkRateViewController : UIViewController {
     var numCols = 30
     let cellWidth: CGFloat = 100
     let cellHeight: CGFloat = 40
-    var profession : [[String:Any]] = [];
+    var profession : [JSON] = [];
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,22 +22,15 @@ class ProfessionAtkRateViewController : UIViewController {
         
         var controller = APIController();
         controller.GetProfession(input: [:]){result in
-            var resultData = result.getData();
-            if let json = resultData as? [String:Any]
-            {
-                if let profession = json["profession"] as? [String:Any]
-                {
-                    if let data = profession["data"] as? [[String:Any]]
-                    {
-                        self.profession = data;
-                        self.numRows = data.count + 1;
-                        self.numCols = data.count + 1;
-                        self.createTable();
-                        self.showData();
-                    }
-                }
-            }
-                
+            
+            let json = JSON(result.getData());
+            let data = json["profession"]["data"].arrayValue;
+            self.profession = data;
+            self.numRows = data.count + 1;
+            self.numCols = data.count + 1;
+            self.createTable();
+            self.showData();
+               
             };
         
     }
@@ -84,67 +78,55 @@ class ProfessionAtkRateViewController : UIViewController {
         for i in 0..<profession.count
         {
             var data = profession[i];
-            if let name = data["name"] as? String
-            {
-                setValue(row: i + 1, col: 0, value: name);
-                setValue(row: 0, col: i + 1, value: name);
-            }
+            let name = data["name"].stringValue;
+            
+            setValue(row: i + 1, col: 0, value: name);
+            setValue(row: 0, col: i + 1, value: name);
+            
         }
         
         var controller = APIController();
         controller.GetFgoProfessionAtkRate(input: [:]){result in
-            var resultData = result.getData();
-            if let json = resultData as? [String:Any]
+            
+            let json = JSON(result.getData());
+            let data = json["profession_atk_rate"]["data"];
+            for index in 0..<data.count
             {
-                if let par = json["profession_atk_rate"] as? [String:Any]
+                let one = data[index];
+                
+                var atk : Int = 0;
+                var def : Int = 0;
+                var rate : Int = 0;
+                
+                let atk_pid = one["atk_pid"].intValue;
+                atk = atk_pid;
+                let def_pid = one["def_pid"].intValue;
+                def = def_pid;
+                let mrate = one["rate"].intValue
+                rate = mrate;
+                
+                
+                var selectRow : Int = 0;
+                var selectCol : Int = 0;
+                
+                for i in 0..<self.profession.count
                 {
-                    if let data = par["data"] as? [[String:Any]]
+                    var data = self.profession[i];
+                    let pid = data["pid"].intValue;
+                    
+                    if(atk == pid)
                     {
-                        for index in 0..<data.count
-                        {
-                            if let one = data[index] as? [String:Any]
-                            {
-                                var atk : Int = 0;
-                                var def : Int = 0;
-                                var rate : Int = 0;
-                                
-                                if let atk_pid = one["atk_pid"] as? Int
-                                {
-                                    atk = atk_pid;
-                                }
-                                if let def_pid = one["def_pid"] as? Int
-                                {
-                                    def = def_pid;
-                                }
-                                if let mrate = one["rate"] as? Int
-                                {
-                                    rate = mrate;
-                                }
-
-                                var selectRow : Int = 0;
-                                var selectCol : Int = 0;
-                             
-                                for i in 0..<self.profession.count
-                                {
-                                    var data = self.profession[i];
-                                    if let pid = data["pid"] as? Int
-                                    {
-                                        if(atk == pid)
-                                        {
-                                            selectRow = i;
-                                        }
-                                        if(def == pid)
-                                        {
-                                            selectCol = i;
-                                        }
-                                    }
-                                }
-                                
-                                self.setValue(row: selectRow + 1, col: selectCol + 1, value: "\(rate)");
-                            }
-                        }
+                        selectRow = i;
                     }
+                    if(def == pid)
+                    {
+                        selectCol = i;
+                    }
+                    
                 }
+                
+                self.setValue(row: selectRow + 1, col: selectCol + 1, value: "\(rate)");
+                
             }
         };
     }

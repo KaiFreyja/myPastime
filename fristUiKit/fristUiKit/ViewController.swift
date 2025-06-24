@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         let controller = APIController();
         controller.GetRole(input: [:]) {result in
             let json = result.getData();
-            self.myLabek.text = "\(json)";
+            //self.myLabek.text = "\(json)";
         }
         
     }
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         let controller = APIController();
         controller.GetGender(input : [:]){result in
             let json = result.getData();
-            self.myLabek.text = "\(json)";
+            //self.myLabek.text = "\(json)";
         }
     }
     
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         let controller = APIController();
         controller.GetProfession(input:[:]){result in
             let json = result.getData();
-            self.myLabek.text = "\(json)";
+            //self.myLabek.text = "\(json)";
         }
     }
     override func viewDidLoad() {

@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class RoleListViewController : UIViewController ,UITableViewDataSource,UITableViewDelegate{
     
     @IBOutlet weak var roleTableView: UITableView!
     
-    var roles : [[String:Any]] = [];
+    var roles : [JSON] = [];
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -32,19 +33,11 @@ class RoleListViewController : UIViewController ,UITableViewDataSource,UITableVi
     {
         var controller = APIController();
         controller.GetRole(input: [:]){result in
-            var resultData = result.getData();
             
-            if let json = resultData as? [String:Any]
-            {
-                if let role = json["role"] as? [String:Any]
-                {
-                    if let data = role["data"] as? [[String:Any]]
-                    {
-                        self.roles = data;
-                        self.roleTableView.reloadData();
-                    }
-                }
-            }
+            var json = JSON(result.getData());
+            let data = json["role"]["data"].arrayValue;
+            self.roles = data;
+            self.roleTableView.reloadData();
         }
     }
     
@@ -75,14 +68,12 @@ extension RoleListViewController {
         var roleName = "";
         var url = "";
         let roleInfo = roles[indexPath.row];
-        if let name = roleInfo["name"] as? String
-        {
-            roleName = name;
-        }
-        if let rid = roleInfo["rid"] as? Int
-        {
-            url = "\(config.IMAGE_DOMAIN)\(rid).png";
-        }
+        
+        let name = roleInfo["name"].stringValue;
+        roleName = name;
+        let rid = roleInfo["rid"].intValue;
+        url = "\(config.IMAGE_DOMAIN)\(rid).png";
+        
         
         cell.textLabel?.text = roleName // 設定 cell 的文字
         cell.imageView?.image = nil // 清除之前的圖片，避免圖片錯亂
