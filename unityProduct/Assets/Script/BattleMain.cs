@@ -308,8 +308,14 @@ public class BattleMain : MonoBehaviour
     }
 }
 
-class BattleManager
+class BattleManager : BattleCardProvider
 {
+
+    /// <summary>
+    /// 卡片系統
+    /// </summary>
+    BattleCardManager battleCardManager = new BattleCardManager();
+
     /// <summary>
     /// 子關卡
     /// </summary>
@@ -345,6 +351,13 @@ class BattleManager
         //取得關卡資訊
         initMission();
         maxMissionNum = missions.Count;
+
+        battleCardManager.cardProvider = this;
+    }
+
+    public Master[] GetCurrentPlayerTeam()
+    {
+        return currentPlayerTeam;
     }
 
     /// <summary>
@@ -417,74 +430,15 @@ class BattleManager
     }
 
     /// <summary>
-    /// 目前牌組
-    /// </summary>
-    Queue<Card> playersCards = new Queue<Card>();
-    /// <summary>
-    /// 該回合的卡牌
-    /// </summary>
-    List<Card> currentsRoundCards = new List<Card>();
-    /// <summary>
     /// 進入回合
     /// </summary>
     public void IntoRound()
     {
         nowRoundNum++;
         //發牌
-        dealCards();
+        battleCardManager.dealCards();
     }
 
-    /// <summary>
-    /// 發牌
-    /// </summary>
-    private void dealCards()
-    {
-        if (playersCards.Count < 5)
-        {
-            initPlayerCard();
-        }
-
-        currentsRoundCards = new List<Card>();
-        for (int i = 0; i < 5; i++)
-        {
-            currentsRoundCards.Add(playersCards.Dequeue());
-        }
-    }
-
-    /// <summary>
-    /// 初始化牌組順序
-    /// </summary>
-    private void initPlayerCard()
-    {
-        playersCards = new Queue<Card>();
-        //初始牌型
-        var cards = new List<Card>();
-        for (int i = 0; i < currentPlayerTeam.Length; i++)
-        {
-            Master master = currentPlayerTeam[i];
-            if (master == null)
-            {
-                continue;
-            }
-            for (int j = 0; j < master.cards.Count; j++)
-            {
-                cards.Add(master.cards[j]);
-            }
-        }
-        //洗牌
-        for (int i = 0; i < cards.Count; i++)
-        {
-            int random = UnityEngine.Random.Range(0, cards.Count - 1);
-            var temp = cards[i];
-            cards[i] = cards[random];
-            cards[random] = temp;
-        }
-
-        foreach (var a in cards)
-        {
-            playersCards.Enqueue(a);
-        }
-    }
 
     /// <summary>
     /// 玩家出的牌
@@ -733,7 +687,7 @@ class BattleManager
         {
             isUpdatePlayerCard = false;
             ///重新發牌
-            initPlayerCard();
+            battleCardManager.initPlayerCard();
         }
     }
 
@@ -810,7 +764,7 @@ class BattleManager
     /// </summary>
     public Card[] GetCurrentsRoundCards()
     {
-        return currentsRoundCards.ToArray();
+        return battleCardManager.currentsRoundCards.ToArray();
     }
 
     public Master GetCardsToMaster(Card card)

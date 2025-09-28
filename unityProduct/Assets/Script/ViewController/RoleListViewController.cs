@@ -49,6 +49,8 @@ public class RoleListViewController : ViewController
                     ViewController.GetViewController<RoleContentViewController>().show(a as JObject);
                 };
                 g.SetActive(true);
+
+                
                 var download = g.AddComponent<ImageDownloader>();
                 download.StartDownload(a["url"].ToString(),(Texture texture)=>
                 {

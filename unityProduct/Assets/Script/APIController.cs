@@ -8,17 +8,41 @@ public class APIController
 {
     public void GetFgoGetRole(JObject input, Action<APIResult> callBack)
     {
-        sendAPI("role", input, callBack);
+        if (Config.IS_SQLITE)
+        {
+            SqliteGetRole sqliteGetRole = new SqliteGetRole();
+            sqliteGetRole.Send(input, callBack);
+        }
+        else
+        {
+            sendAPI("role", input, callBack);
+        }
     }
 
-    public void GetFgoRoleResource(JObject input,Action<APIResult> callBack)
+    public void GetFgoRoleResource(JObject input, Action<APIResult> callBack)
     {
-        sendAPI("role_resource", input, callBack);
+        if (Config.IS_SQLITE)
+        {
+            SqliteGetRoleResource sqliteGetRoleResource = new SqliteGetRoleResource();
+            sqliteGetRoleResource.Send(input,callBack);
+        }
+        else
+        {
+            sendAPI("role_resource", input, callBack);
+        }
     }
 
     public void AskAiTalk(JObject input, Action<APIResult> callBack)
     {
-        postAPI("talk_group_ask", input, callBack);
+        if (Config.IS_SQLITE)
+        {
+            ClientAiTalk clientAiTalk = new ClientAiTalk();
+            clientAiTalk.Send(input, callBack);
+        }
+        else
+        {
+            postAPI("talk_group_ask", input, callBack);
+        }
     }
 
 
